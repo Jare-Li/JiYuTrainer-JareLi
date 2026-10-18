@@ -1,1098 +1,924 @@
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
     <title>JiYu Trainer Main Window</title>
     <style>
         html {
             background: transparent;
             overflow: hidden;
         }
-
-        /* Window anim*/
-
         body {
-            font-family: "Microsoft YaHei", Tahoma, sans-serif;
-            transition: transform linear 150ms, opacity linear 150ms;
+            margin: 0;
+            padding: 10px;
+            font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
+            color: #1f2937;
             opacity: .3;
+            transition: opacity linear 150ms;
+            box-sizing: border-box;
         }
-        body.shown {
-            opacity: 1;
-        }
-        body.minize {
-            transition: opacity linear 100ms;
-            opacity: .3;
-        }
+        body.shown { opacity: 1; }
+        body.minize { opacity: .3; }
+        * { box-sizing: border-box; }
 
-        .window-shadow {
-            position: relative;
-        }
         .window-box {
-            display: block;
-            position: relative;
-            margin: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 13px rgba(0,0,0,.5);
-            background-color: #fff;
-            height: 480px;
-        }
-
-        /* Window title*/
-        .window-title-area {
-            position: relative;
-            height: 36px;
-        }
-        .window-title-area h5 {
-            display: inline-block;
-            position: absolute;
-            top: 3px;
-            left: 50px;
-            width: 300px;
-            color: #fff;
-        }
-        .window-title-area img {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-
-        /* Window close*/
-        .title-close {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            position: absolute;
-            top: 12px;
-            right: 15px;
-            background: url(res:btn-close.png) no-repeat 0px 0;
-            border-radius: 50%;
-        }
-        .title-close.black {
-            background-position: -96px 0;
-        }
-        .title-close:hover {
-             background-position: -32px 0;
-        }
-        .title-min {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            position: absolute;
-            top: 12px;
-            right: 50px;
-            background: url(res:btn-min.png) no-repeat 0px 0;
-            border-radius: 50%;
-        }
-        .title-min:hover {
-             background-position: -32px 0;
-        }
-
-        .window-area {
-            display: block;
             position: relative;
             width: 100%;
-            height: 390px;
-            border-radius: 10px;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
+            height: 500px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 22px 60px rgba(15, 23, 42, .28);
+            overflow: hidden;
+            border: 1px solid rgba(15, 23, 42, .06);
         }
-        .state-ok .window-area {
-            background: linear-gradient(to bottom, rgb(46,164,240) 0%,rgb(46,140,240) 100%);
+        .window-area {
+            position: relative;
+            height: 410px;
+            background: #f6f9fd;
+            transition: background-color 180ms linear;
         }
-        .state-work .window-area {
-            background: linear-gradient(to bottom, rgb(0, 204, 5) 0%,rgb(40, 140, 0) 100%);
-        }
-        .state-notwork .window-area {
-            background: linear-gradient(to bottom, rgb(108, 117, 125) 0%,rgb(77, 88, 99) 100%);
-        }
-        .state-warn .window-area {
-            background: linear-gradient(to bottom, rgba(255, 153, 0, 0.77) 0%,rgb(228, 126, 0) 100%);
-        }
+        .window-box.state-work .window-area { background: #eefbf4; }
+        .window-box.state-warn .window-area { background: #fff8ed; }
+        .window-box.state-notwork .window-area { background: #f6f8fb; }
 
-
-        .window-footer-area {
+        /* Title bar */
+        .window-title-area {
+            position: relative;
+            height: 52px;
+            padding: 0 52px 0 16px;
+            white-space: nowrap;
+        }
+        #title-icon {
             position: absolute;
-            width: 374px;
-            height: 180px;
-            bottom: 55px;
-            left: 0;
-            right: 0;
-            background-repeat: no-repeat;
-            background-size: 374px 180px;
-            background-image: url(res:footer-mask.png);
+            left: 16px;
+            top: 16px;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
         }
-        /*
-        .state-ok .window-footer-area {
-            background-image: url(res:footer-xok.png);
-        }
-        .state-warn .window-footer-area {
-            background-image: url(res:footer-xwarn.png);
-        }
-        .state-notwork .window-footer-area {
-            background-image: url(res:footer-xnotwork.png);
-        }
-        .state-work .window-footer-area {
-            background-image: url(res:footer-xwork.png);
-        }
-        */
-
-
-        /* Window extend area */
-        .window-extend-area {
-            display: none;
-            z-index: 10;
+        #title {
             position: absolute;
-            bottom: 0;
-            left: -5px;
-            right: -5px;
-            top: 60px;
-            bottom: 100px;
-            transform: scale(0.8);
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,.3);
-            background-color: #fff;
-            opacity: 0;
-            transition: transform linear 100ms, opacity linear 100ms;
-            padding: 3px 10px;
-        }
-        .window-extend-area.shown {
-            display: block;
-             transform: scale(1);
-            opacity: 1;
-        }
-        .window-extend-area.hidden{
-             display: block;
-             transform: scale(0.8) ;
-             opacity: 0;
-        }
-        .window-extend-area.upper {
-           z-index: 15;
-        }
-        .window-extend-area-mask {
-            display: none;
-            opacity: 0;
-            position: absolute;
+            left: 44px;
             top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background-color: #000;
-            transition: opacity linear 150ms;
-            z-index: 1;
-        }
-        .window-extend-area-mask.upper {
-            z-index: 11;
-        }
-        .window-extend-area.shown.with-mask + .window-extend-area-mask {
-            display: block;
-            opacity: 0.3;
-            border-radius: 10px;
-        }
-
-        #common_message {
-            padding: 10px 20px;
-            top: 150px;
-            bottom: 150px;
-        }
-        #update_message {
-
-            bottom: 70px;
-            top: 60px;
-            left: 15px;
-            right: 15px;
-            padding: 10px 20px;
-            background-image: url(res:update_bg.png);
-            background-repeat: no-repeat;
-            background-position: 0 -44px;
-        }
-        #update_message_text {
-            margin-top: 30px;
-            padding:  20px;
-        }
-        #update_message_text ol, #update_message_text ul {
+            height: 52px;
+            line-height: 52px;
             margin: 0;
-            padding: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: .2px;
         }
-        #isnew_message {
-            bottom: 121px;
-            top: 100px;
-            left: 15px;
-            right: 15px;
-            padding: 10px 20px;
-            background-image: url(res:update_bg.png);
-            background-repeat: no-repeat;
-            background-position: left -30px;
+        .title-badge {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 6px;
+            border-radius: 6px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 16px;
+            vertical-align: 1px;
         }
-        #isnew_message_text {
-            margin-top: 55px;
-            padding: 20px;
+        .title-min, .title-close {
+            position: absolute;
+            top: 13px;
+            width: 26px;
+            height: 26px;
+            line-height: 24px;
+            text-align: center;
+            border-radius: 8px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 17px;
+            font-family: "Segoe UI", sans-serif;
+            transition: background-color 120ms linear, color 120ms linear;
+        }
+        .title-min { right: 46px; }
+        .title-close { right: 14px; }
+        .title-min:hover, .title-close:hover {
+            background: rgba(15, 23, 42, .06);
+            color: #334155;
         }
 
-        /* Window base content */
+        /* Hero / status */
         .main-state {
+            position: relative;
+            height: 358px;
+            padding: 14px 22px 0 22px;
             text-align: center;
+            overflow: hidden;
         }
         .main-state .inner {
             display: inline-block;
-            width: 190px;
-            height: 190px;
-            margin-top: 15px;
-            margin-left: 5px;
-            background-image: url(res:bg-main-state.png);
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-top: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 9px solid rgba(46, 164, 240, .12);
+            box-shadow: 0 10px 26px rgba(15, 23, 42, .06);
         }
-        .main-state .inner img {
+        .state-work .main-state .inner {
+            border-color: rgba(16, 185, 129, .16);
+        }
+        .state-warn .main-state .inner {
+            border-color: rgba(245, 158, 11, .18);
+        }
+        #status_icon {
             display: inline-block;
-            width: 94px;
-            height: 94px;
-            background: url(res:states.png) no-repeat 0px 0;
-            margin-top: 48px;
+            position: absolute;
+            left: 28px;
+            top: 28px;
+            width: 76px;
+            height: 76px;
+            background-image: url(res:states.png);
+            background-repeat: no-repeat;
+            background-size: 532px 76px;
+            background-position: 0 0;
         }
-        .main-state .inner img.state-ctl-no-lock {
-            background-position: -0px 0;
-        }        
-        .main-state .inner img.state-ctl-unlock {
-            background-position: -94px 0;
-        }
-        .main-state .inner img.state-failed {
-            background-position: -188px 0;
-        }
-        .main-state .inner img.state-manual-stop {
-            background-position: -282px 0;
-        }
-        .main-state .inner img.state-not-found {
-            background-position: -376px 0;
-        }
-        .main-state .inner img.state-unknow-problem {
-            background-position: -470px 0;
-        }
-        .main-state .inner img.state-not-run {
-            background-position: -564px 0;
-        }
+        #status_icon.state-ctl-no-lock { background-position: 0 0; }
+        #status_icon.state-ctl-unlock { background-position: -76px 0; }
+        #status_icon.state-failed { background-position: -152px 0; }
+        #status_icon.state-manual-stop { background-position: -228px 0; }
+        #status_icon.state-not-found { background-position: -304px 0; }
+        #status_icon.state-unknow-problem { background-position: -380px 0; }
+        #status_icon.state-not-run { background-position: -456px 0; }
 
-        .main-state .status-text {
-            display: inline-block;
-            margin-top: 10px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
+        .status-text {
+            display: block;
+            margin-top: 18px;
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: 700;
+            color: #0f172a;
         }
-        .main-state .status-text2 {
-            display: inline-block;
-            margin-top: 3px;
-            color: #fff;
-            font-size: 14px;
+        .status-text2 {
+            display: block;
+            margin-top: 4px;
+            min-height: 20px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #64748b;
         }
+        .state-work .status-text { color: #047857; }
+        .state-warn .status-text { color: #b45309; }
+        .state-notwork .status-text { color: #475569; }
 
+        /* Footer */
+        .window-footer-area {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 90px;
+            padding: 0 12px;
+            background: #ffffff;
+            border-top: 1px solid #eef2f7;
+            display: block;
+            line-height: 90px;
+            white-space: nowrap;
+        }
+        .btn-footers-area {
+            display: inline-block;
+            vertical-align: middle;
+            padding-top: 0;
+            line-height: normal;
+        }
         .btn-footers {
             display: inline-block;
             position: relative;
             width: 40px;
             height: 40px;
+            margin-right: 3px;
+            border-radius: 12px;
             background-image: url(res:btn-footers.png);
-            margin-left: 20px;
+            background-repeat: no-repeat;
+            background-position: 0 0;
+            text-decoration: none;
+            vertical-align: middle;
+            transition: background-color 120ms linear, transform 120ms linear;
         }
-        .btn-footers-area{
-            display: block;
-            position: absolute;
-            text-align: center;
-            bottom: -20px;
-            left: 0;
-            right: 0;
+        .btn-footers:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-1px);
         }
-        .btn-footers-area .version {
+        .protect-stat {
             display: inline-block;
-            position: absolute;
-            text-align: center;
-            bottom: -28px;
-            left: 26px;
+            position: relative;
+            width: 44px;
+            height: 44px;
+            margin: 0 8px 0 0;
+            border-radius: 14px;
+            background-image: url(res:btn-footers.png);
+            background-repeat: no-repeat;
+            vertical-align: middle;
         }
-        .btn-footers.btn-kill {
-            background-position: -80px 0;
+        .protect-stat.no-danger { background-position: -560px 0; }
+        .protect-stat.not-protected { background-position: -480px 0; }
+        .protect-stat.protected { background-position: -520px 0; }
+
+        .btn-footers.btn-restart { background-position: 0 0; }
+        .btn-footers.btn-kill { background-position: -80px 0; }
+        .btn-footers.btn-top { background-position: -240px 0; }
+        .btn-footers.btn-top.topmost { background-position: -280px 0; }
+        .btn-footers.btn-debug { background-position: -160px 0; }
+        .btn-footers.btn-about { background-position: -320px 0; }
+        .btn-footers.btn-power { background-position: -400px 0; }
+
+        .version {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            padding-top: 0;
+            color: #94a3b8;
+            font-size: 10px;
+            line-height: 15px;
+            text-align: left;
         }
-        .btn-footers.btn-kill:hover {
-            background-position: -120px 0;
-         }
-        .btn-footers.btn-restart {
-            background-position: 0px 0;
-         }
-        .btn-footers.btn-restart:hover {
-            background-position: -40px 0;
-         }
-        .btn-footers.btn-top {
-            background-position: -240px 0;
-            margin-left: 20px;
-        }
-        .btn-footers.btn-top:hover,  .btn-footers.btn-top.topmost {
-            background-position: -280px 0;
-         }
-        .btn-footers.btn-debug {
-            background-position: -160px 0;
-         }
-        .btn-footers.btn-debug:hover {
-            background-position: -200px 0;
-         }
-        .btn-footers.btn-about {
-            background-position: -320px 0;
-         }
-        .btn-footers.btn-about:hover {
-            background-position: -360px 0;
-         }
-        .btn-footers.btn-power {
-            background-position: -400px 0;
-         }
-        .btn-footers.btn-power:hover {
-            background-position: -440px 0;
-         }
-        .btn-footers.protect-stat {
-            margin-left: 0px;
-        }
-        .btn-footers.protect-stat.not-protected {
-            background-position: -480px 0;
-        }
-        .btn-footers.protect-stat.protected {
-            background-position: -520px 0;
-        }
-        .btn-footers.protect-stat.no-danger {
-            background-position: -560px 0;
+        .version b {
+            display: block;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
         }
 
-         /* Tooltip */
-        .window-tooltips-top {
-            display: block;
+        /* Tooltips */
+        .window-tooltips-top, .window-tooltips-bottom {
             position: absolute;
-            top: 0;
-            height: 2px;
             left: 0;
             right: 0;
-            z-index: 20;
-            overflow: visible;
+            height: 0;
+            z-index: 60;
         }
-        .window-tooltips-bottom {
-            display: block;
-            position: absolute;
-            bottom: 0;
-            height: 2px;
-            left: 0;
-            right: 0;
-            z-index: 20;
-            overflow: visible;
-        }
-
+        .window-tooltips-top { top: 0; }
+        .window-tooltips-bottom { bottom: 90px; }
         .tooltip {
-            display: inline-block;
-            background-color: #000;
-            border-radius: 4px;
-            padding: 4px 8px;
-            color: #fff;
-            text-align: center;
-            z-index: 20;
-            opacity: 0;
-            transform: scale(0);
-            transition: transform linear 100ms, opacity linear 100ms;
+            display: none;
             position: absolute;
+            padding: 8px 10px;
+            border-radius: 9px;
+            background: #0f172a;
+            color: #f8fafc;
+            font-size: 11px;
+            line-height: 16px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, .25);
+            white-space: normal;
         }
-        .tooltip.shown {
-           transform: scale(1);
-           display: inline-block;
-           opacity: 1;
+        .tooltip.shown { display: block; }
+        .tooltip small { color: #cbd5e1; font-size: 10px; }
+        .tooltip h4 { margin: 0 0 2px 0; font-size: 11px; color: #fff; }
+        .tooltip-jiyu-pid { left: 28px; bottom: 8px; width: 280px; }
+        .tooltip-jiyu-restart { left: 28px; bottom: 8px; width: 280px; }
+        .tooltip-version { left: 26px; bottom: 8px; width: 170px; }
+        .tooltip-topmost { left: 72px; bottom: 8px; width: 86px; }
+        .tooltip-sets { left: 160px; bottom: 8px; width: 76px; }
+        .tooltip-power { left: 250px; bottom: 8px; width: 70px; }
+        .tooltip-protect-stat { left: 22px; bottom: 8px; width: 286px; }
+        #tooltip_fast {
+            left: 18px;
+            right: 18px;
+            top: 92px;
+            width: auto;
+            padding: 14px 16px;
+            font-size: 12px;
+            line-height: 18px;
         }
+        #tooltip_fast h4, #tooltip_fast h5 { margin: 0; font-size: 13px; color: #fff; }
 
-        /*Tab*/
-        .window-tab-con {
-            text-align: center;
-            height: 40px;
+        /* Expand sheet */
+        .window-extend-area {
+            display: none;
             position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -23px;
+            left: 12px;
+            right: 12px;
+            top: 62px;
+            bottom: 96px;
+            padding: 14px 16px 16px 16px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .22);
+            z-index: 30;
+            opacity: 0;
+            transform: translateY(8px) scale(.985);
+            transition: opacity 140ms linear, transform 140ms linear;
+        }
+        .window-extend-area.shown {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .window-extend-area.hidden {
+            display: block;
+            opacity: 0;
+            transform: translateY(8px) scale(.985);
+        }
+        .window-extend-area.upper { z-index: 40; }
+
+        .window-tab-con {
+            position: absolute;
+            left: 16px;
+            right: 56px;
+            top: 12px;
+            height: 32px;
         }
         .window-tab {
             display: inline-block;
-            position: relative;
-            padding: 0;
-            width: auto;
-            word-break: keep-all;
-            background-color: rgba(0, 0, 0, .6);
-            border-radius: 20px;
-        }
-        .window-page {
-            display: none;
-            padding: 10px;
-        }
-        .window-page.active {
-             display: block;  
+            padding: 3px;
+            border-radius: 10px;
+            background: #f1f5f9;
         }
         .btn-tab {
             display: inline-block;
-            padding: 5px 15px;
-            background-color: transparent;
-            color: #fff;
-            margin: 0;
-            border-radius: 20px;
+            padding: 5px 14px;
+            border-radius: 8px;
+            color: #64748b;
+            font-size: 12px;
             text-decoration: none;
         }
-        .btn-tab.active{
-            background-color: #fff;
-            box-shadow: 0 0 7px rgba(0,0,0,.5);
-            color: #000;
-        }
-        .btn-tab:hover {
-            color: #50c6ff
-        }
-        .btn-tab.active:hover {
-            color: #000;
-         }
-
-        /* Button*/
-        .btn-common {
-            display: inline-block;
-            border-radius: 20px;
-            padding: 5px 15px;
-            background-color: #cdcdcd;
-            color: #fff;
-            text-decoration: none;
-        }
-        .btn-common:hover{
-            background-color: #3ca0d0;
-            color: #fff;
-        }
-        .btn-about {
-            position: absolute;
-            bottom: 36px;
-            left: 5px;
-        }
-        .btn-quit {
-            border-top-right-radius: 0px;
-            border-bottom-right-radius: 0px;
-        }
-        .btn-quit:hover {
-            color: #fff;
-        }
-
-        .btn-dager {
-            background-color: #ff9b40;
-        }
-        .btn-dager:hover {
-            background-color: #ff7a00;
-        }
-        .btn-primary {
-            background-color: #0072ff;
-        }
-        .btn-primary:hover {
-            background-color: #3ca0d0;
-        }
-        .btn-secondary {
-            background-color: #676767;
-        }
-        .btn-secondary:hover {
-            background-color: #91adc4;
-        }
-
-        .btn-close-extend-area i {
-            display: inline-block;
-            width: 13px;
-            padding-left: 9px;
-            padding-top: 5px;
-            background-image: url(res:btn-close.png);
-            background-repeat: no-repeat;
-            background-position: -1px -2px;
+        .btn-tab.active {
+            background: #ffffff;
+            color: #0f172a;
+            font-weight: 600;
+            box-shadow: 0 1px 4px rgba(15, 23, 42, .10);
         }
         .btn-close-extend-area {
             position: absolute;
-            top: -10px;
-            right: 15px;
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #fff;
-            border-radius: 50%;
-            background-color: #ff6440;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            text-decoration: none;
-        }
-        .btn-close-extend-area:hover {
-            background-color: #ff3100;
-        }
-
-        .op-item {
-            height: 46px;
-            cursor: pointer;
-            display: block;
-            margin-top: 5px;
-            padding: 3px;
-            text-decoration: none;
-        }
-        .op-item span {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 18px;
-            color: #101;
-            margin-left: 10px;
-        }
-        .op-item img {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background-image: url(res:btn-footers.png);
-            vertical-align: middle;
-        }
-        .op-item img.shutdown {
-            background-position: -640px 0;
-        }
-        .op-item img.reboot {
-            background-position: -680px 0;
-        }
-        .op-item img.quit {
-            background-position: -600px 0;
-        }
-        .op-item:hover {
-            border-radius: 10px;
-            box-shadow: 0 0 7px rgba(0,0,0,.5);
-        }
-
-        .new-ver{
-            margin-top: 10px;
+            right: 14px;
+            top: 14px;
+            width: 28px;
+            height: 28px;
+            line-height: 26px;
             text-align: center;
-            color: #fff;
-            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 17px;
+            font-family: "Segoe UI", sans-serif;
         }
-        .new-ver .ver {
-            font-size: 16px;
-        }
-        .new-ver .text {
-            display: block;
-            font-size: 25px;
-            font-weight: bold;
-        }
+        .btn-close-extend-area:hover { background: #e2e8f0; color: #334155; }
 
-        .cfg-link {
-            display: inline-block;
-            width: 132px;
-            margin-top: 4px;
-            position: relative;
-        }
-        .cfg-link-left {
-            
-        }
-        .cfg-link-right {
-            float: right;
-        }
-        .cfg-link::after {
-            display: inline-block;
+        .window-page {
+            display: none;
             position: absolute;
-            left: -29px;
-            top: -3px;
-            width: 26px;
-            height: 26px;
-            background: url(res:link-icons.png) no-repeat 0px 0;
+            left: 16px;
+            right: 16px;
+            top: 66px;
+            bottom: 14px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        .window-page.active { display: block; }
+        .window-page h4 {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            color: #0f172a;
+        }
+        .window-page h5 {
+            margin: 14px 0 6px 0;
+            font-size: 11px;
+            letter-spacing: .4px;
+            color: #94a3b8;
+            font-weight: 600;
         }
 
-        #link_unload_netfilter::after {
-            background-position: -78px 0px;
+        /* Settings */
+        .check-row {
+            display: block;
+            position: relative;
+            padding: 5px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #334155;
         }
-        #link_locate_jiyu_position::after {
-            background-position: -52px 0px;
+        .check-row:hover { background: #f8fafc; }
+        .check-row input {
+            width: 15px;
+            height: 15px;
+            margin: 0 8px 0 0;
+            vertical-align: -2px;
         }
-        #link_read_jiyu_password2::after {
-            background-position: -26px 0px;
+        .check-row label { cursor: pointer; }
+        .tool-links {
+            margin: 2px 0 6px 0;
+            line-height: 26px;
         }
-        #link_more_settings::after {
-            background: url(res:link-icons.png) no-repeat 0px 0;
+        .tool-link {
+            display: inline-block;
+            margin: 0 6px 4px 0;
+            padding: 3px 9px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #0369a1;
+            font-size: 11px;
+            line-height: 17px;
+            text-decoration: none;
         }
-        #link_attact::after {
-            background-position: -104px 0px;
+        .tool-link:hover { background: #eef6fc; border-color: #bae0fa; }
+        .settings-note {
+            margin: 4px 0 8px 0;
+            color: #94a3b8;
+            font-size: 10px;
+            line-height: 15px;
+        }
+        .link-row {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eef2f7;
+            font-size: 11px;
+            line-height: 22px;
+        }
+        .link-row a, .cfg-link {
+            color: #0369a1;
+            text-decoration: none;
+            margin-right: 12px;
+        }
+        .link-row a:hover, .cfg-link:hover { text-decoration: underline; }
+        .link-row .danger { color: #b45309; }
+
+        .btn-common {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 9px;
+            background: #eef2f7;
+            color: #334155;
+            font-size: 12px;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 120ms linear;
+        }
+        .btn-common:hover { background: #e2e8f0; }
+        .btn-common.btn-primary { background: #2ea4f0; color: #ffffff; }
+        .btn-common.btn-primary:hover { background: #1d8ed8; }
+        .btn-common.btn-secondary { background: #fee2e2; color: #b91c1c; }
+        .btn-common.btn-secondary:hover { background: #fecaca; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .ml-2 { margin-left: 8px; }
+        .m-0 { margin: 0; }
+
+        /* Debug */
+        #status_area {
+            height: 210px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: #0f172a;
+            color: #cbd5e1;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 10px;
+            line-height: 15px;
+            overflow-y: scroll;
+        }
+        #status_area div { margin-bottom: 2px; }
+        .text-black { color: #e2e8f0; }
+        .text-info { color: #7dd3fc; }
+        .text-warning { color: #fcd34d; }
+        .text-danger { color: #fca5a5; }
+        #input_cmd {
+            width: 250px;
+            height: 30px;
+            margin-top: 10px;
+            padding: 0 10px;
+            border: 1px solid #dbe3ee;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 12px;
+            font-family: Consolas, monospace;
+            outline: none;
+        }
+        #input_cmd:focus { border-color: #2ea4f0; }
+        #link_more_cmd { margin-left: 4px; }
+
+        /* About */
+        .about-head { text-align: center; padding-top: 2px; }
+        .about-head img { width: 68px; height: 68px; border-radius: 18px; }
+        .about-title {
+            margin-top: 8px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .about-sub {
+            margin-top: 2px;
+            font-size: 11px;
+            color: #64748b;
+        }
+        .about-credits {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #eef2f7;
+            font-size: 11px;
+            line-height: 18px;
+            color: #475569;
+        }
+        .about-links {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 11px;
+            line-height: 24px;
+        }
+        .about-links a {
+            color: #0369a1;
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .about-links a:hover { text-decoration: underline; }
+        .about-note {
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #fff7ed;
+            color: #9a3412;
+            font-size: 10px;
+            line-height: 15px;
         }
 
-        #link_close_extend_area {
-            z-index: 20;
+        /* Modals and masks */
+        .window-extend-area-mask {
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, .38);
+            z-index: 35;
+            border-radius: 18px;
+        }
+        .window-extend-area.shown.with-mask + .window-extend-area-mask { display: block; }
+
+        #common_message {
+            top: 110px;
+            bottom: 150px;
+            left: 22px;
+            right: 22px;
+            padding: 18px;
+        }
+        #common_message h3, #cmds_message h3, #power_message h3, #exit_message h3 {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: #0f172a;
+        }
+        #common_message p, #exit_message p {
+            margin: 0;
+            font-size: 11px;
+            line-height: 17px;
+            color: #475569;
+        }
+        #common_message .title-close {
+            top: 12px;
+            right: 12px;
+            color: #64748b;
+        }
+        #cmds_message {
+            top: 64px;
+            bottom: 74px;
+            left: 14px;
+            right: 14px;
+            padding: 16px;
         }
         #commands_help_area {
+            height: 250px;
+            overflow-y: scroll;
+            font-size: 10px;
+            line-height: 18px;
+            color: #334155;
+        }
+        #commands_help_area span, #commands_help_area a {
             display: block;
-            width: 100%;
-            height: 300px;
-            overflow: scroll;
+            padding: 1px 0;
+            color: #334155;
+            text-decoration: none;
+        }
+        #commands_help_area a:hover { color: #0369a1; }
+        #commands_help_area .text-danger { color: #dc2626; }
+        #power_message {
+            top: 120px;
+            bottom: 150px;
+            left: 26px;
+            right: 26px;
+            padding: 18px;
+        }
+        .op-item {
+            display: block;
+            position: relative;
+            padding: 10px 12px;
+            margin-top: 6px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #eef2f7;
+            color: #334155;
             font-size: 12px;
-            vertical-scrollbar: my-v-scrollbar;
-            horizontal-scrollbar: my-h-scrollbar;
+            text-decoration: none;
         }
-
-        /*Status area*/
-        #status_area {
-            width: 100%;
-            height: 180px;
-            overflow: scroll;
-            font-size: 12px;
-            font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-            vertical-scrollbar: my-v-scrollbar;
-            horizontal-scrollbar: my-h-scrollbar;
-            overflow: scroll;
-            padding-bottom: 5px;
-            padding-right: 5px;
-        }
-        #status_area div {
-            width: auto;
-            white-space: pre;
-        }
-
-        /* Utitles*/
-        .m-0 {
-            margin: 0px;
-        }
-        .ml-0 {
-            margin-left: 0;
-        }
-        .mt-0 {
-            margin-top: 0;
-        }
-        .mt-1 {
-            margin-top: 3px;
-        }
-        .mt-2 {
-            margin-top: 5px;
-        }
-        .mt-3 {
-            margin-top: 8px;
-        }
-        .ml-1 {
-            margin-left: 3px;
-        }
-        .ml-2 {
-            margin-left: 5px;
-        }
-        .ml-3 {
-            margin-left: 8px;
-        }
-        .p-0 {
-            padding: 0px;
-        }
-        .p-3{
-            padding: 10px;
-        }
-
-        .text-black {
-            color: #000 !important;
-        }
-        .text-info {
-            color: #17a2b8 !important;
-        }
-        .text-danger {
-            color: #dc3545 !important;
-        }
-        .text-success {
-            color: #28a745 !important;
-        }
-        .text-warning {
-            color: #d58300;
-        }
-        .text-secondary {
-            color: #6c757d !important;
-        }
-        .text-primary {
-            color: #007bff !important;
-        }
-
-        .text-center {
+        .op-item:hover { background: #f1f5f9; border-color: #e2e8f0; }
+        .op-item span { display: inline-block; margin-left: 8px; vertical-align: 2px; }
+        .op-item .op-icon {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
             text-align: center;
+            border-radius: 7px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 13px;
         }
-        .text-right {
+        #update_message {
+            top: 86px;
+            bottom: 100px;
+            left: 18px;
+            right: 18px;
+            padding: 16px;
+        }
+        #isnew_message {
+            top: 106px;
+            bottom: 118px;
+            left: 20px;
+            right: 20px;
+            padding: 16px;
+        }
+        #exit_message {
+            top: 100px;
+            bottom: 112px;
+            left: 18px;
+            right: 18px;
+            padding: 16px;
+        }
+        #hello_message {
+            top: 150px;
+            bottom: 160px;
+            left: 30px;
+            right: 30px;
+            padding: 16px;
+        }
+        .new-ver { margin-bottom: 8px; }
+        .new-ver .text {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 10px;
+        }
+        .new-ver .ver {
+            display: block;
+            margin-top: 6px;
+            color: #0f172a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        #update_message_text, #isnew_message_text {
+            height: 92px;
+            overflow-y: scroll;
+            font-size: 11px;
+            line-height: 17px;
+            color: #475569;
+        }
+        .modal-actions {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 14px;
             text-align: right;
         }
-
-        label {
-            display: inline-block;
-            margin-bottom: .5rem;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-
-        #page_about {
-            text-align:center;
-        }
-        .alert {
-            display: block;
-            position: relative;
-            padding: 12px 20px;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: 6px;
-        }
-        .alert-success {
-            color: #155724;
-            background-color: #d4edda;
-            /*border-color: #c3e6cb;*/
-        }
-
-        /* Check box */
-        .form-check {
-            position: relative;
-            display: inline-block;
-        }
-        .form-item {
-            position: relative;
-            display: block;
-        }
-        .form-check label  {
-            vertical-align: middle;
-            height: 26px;
-            line-height: 26px;
-            margin-bottom: 0;
-        }
-        .form-check input[type=checkbox] {
-            background: url(res:checkboxs.png) no-repeat 0px 0;
-            background-position: 0 0px;
-            width: 26px;
-            height: 26px;
-        }
-        .form-check input[type=checkbox]:hover {  background-position:  -26px 0;   }
-        .form-check input[type=checkbox]:checked {  background-position:  -52px 0;  }
-        .form-check input[type=checkbox]:checked:hover { background-position:  -78px 0;  }
-        .form-check input[type=checkbox]:disabled { background-position:  -104px 0;   }
-        .form-check input[type=checkbox]:checked:disabled { background-position:  -130px 0;   }
-        
-        /* Tooltip */
-        * popup[role="tooltip"] {
-            display: inline-block;
-            word-break: break-word;
-            background: #000;
-            color: #fff;
-            border-radius: 6px;
-            padding: 8px;
-            max-width: 300px;
-        }
-
-        @set my-v-scrollbar {
-            .prev {
-                display: none;
-            }
-            .next {
-                display: none;
-            }
-            .base,
-            .next-page,
-            .prev-page {
-                background: white;
-                border-left: none;
-            }
-            .slider {
-                background: #ddd;
-                border-radius: 6px;
-                border: 2px solid #fff;
-            }
-            .slider:hover {
-                background: #999;
-            }
-            .slider:active {
-                background: #888;
-            }
-            .base:disabled {
-                background: none;
-            }
-            .base {
-                width: 10dip;
-            }
-            /* explicit declaration of its width */
-            .corner {
-                background: transparent;
-            }
-        }
-        @set my-h-scrollbar {
-            .prev {
-                display: none;
-            }
-            .next {
-                display: none;
-            }
-            .base,
-            .next-page,
-            .prev-page {
-                background: white;
-                border-left: none;
-            }
-            .slider {
-                background: #ddd;
-                border-radius: 6px;
-                border: 2px solid #fff;
-            }
-            .slider:hover {
-                background: #999;
-            }
-            .slider:active {
-                background: #888;
-            }
-            .base:disabled {
-                background: none;
-            }
-            .base {
-                height: 10dip;
-            }
-            /* explicit declaration of its width */
-            .corner {
-                background: transparent;
-            }
-        }
+        .modal-actions .btn-common { margin-left: 6px; }
     </style>
 </head>
 <body class="window-shadow">
-
     <div class="window-box" id="wnd">
-
-        <!--´°¿Ú-->
         <div class="window-area">
-            <!--±êÌâÀ¸-->
             <div class="window-title-area" id="title-area">
                 <img src="res:icon-main-small.png" id="title-icon" />
-                <h5 id="title">JiYu Trainer Main Window</h5>
-                <a class="title-min" id="btn_min" href="#" title="×îĞ¡»¯"></a>
-                <a class="title-close" id="btn_close" href="#" title="¹Ø±Õ"></a>
+                <h5 id="title">JiYu Trainer <span class="title-badge">Jare-Li</span></h5>
+                <a class="title-min" id="btn_min" href="#" title="æœ€å°åŒ–">âˆ’</a>
+                <a class="title-close" id="btn_close" href="#" title="å…³é—­">Ã—</a>
             </div>
-            <!--Ö÷×´Ì¬Í¼±ê-->
             <div class="main-state">
                 <div class="inner">
                     <img class="state-not-found" id="status_icon" />
                 </div>
-                <br /><span class="status-text" id="status_text_main">ÕıÔÚ³õÊ¼»¯</span>
-                <br /><span class="status-text2" id="status_text_more">...</span>
+                <div class="status-text" id="status_text_main">æ­£åœ¨åˆå§‹åŒ–</div>
+                <div class="status-text2" id="status_text_more">è¯·ç¨å€™...</div>
             </div>
         </div>
-        <!--¹¤¾ßÌáÊ¾µ¯³ö²ã-->
+
         <div class="window-tooltips-top">
-            <div class="tooltip" id="tooltip_fast" style="top: 100px; left: 30px; right: 30px"></div>
+            <div class="tooltip" id="tooltip_fast"></div>
         </div>
         <div class="window-tooltips-bottom">
-            <div class="tooltip tooltip-vesion" style="bottom: 90px; left: 75px; width: 150px">µ±Ç°°æ±¾ £ºV1.7.6<br /><small>µã»÷²é¿´°ïÖú</small></div>
-            <div class="tooltip tooltip-jiyu-pid" style="bottom: 86px; left: 30px; width: 300px;padding-top:8px;padding-bottom:8px">StudentMain.exe PID : <span id="status_jiyu_pid">Î´Öª</span><br /><small>µã»÷É±ËÀ¼«Óòµç×Ó½ÌÊÒ</small></div>
-            <div class="tooltip tooltip-jiyu-restart" style="bottom: 86px; left: 30px; width: 300px;padding-top:8px;padding-bottom:8px"><h4 class="m-0">¼«ÓòÎ»ÖÃ</h4><span id="status_jiyu_path" style="color: #cecece">Î´ÕÒµ½¼«Óòµç×Ó½ÌÊÒ</span></div>
-            <div class="tooltip tooltip-topmost" id="tooltip_top" style="bottom: 83px; left: 83px; width: 70px">±¾´°¿ÚÖÃ¶¥</div>
-            <div class="tooltip tooltip-sets" style="bottom: 83px; left: 203px; width: 80px">¿ØÖÆÌ¨ºÍÉèÖÃ</div>
-            <div class="tooltip tooltip-power" style="bottom: 83px; left: 281px; width: 55px">µçÔ´¿ØÖÆ</div>
-            <div class="tooltip tooltip-protect-stat" style="bottom: 83px; left: 30px; width: 300px;" id="status_protect">ÄúÎ´ÊÜµ½¼«Óòµç×Ó½ÌÊÒµÄ¿ØÖÆ</div>
+            <div class="tooltip tooltip-version">å½“å‰ç‰ˆæœ¬ <b>v1.7.6</b><br /><small>Jare-Li Refactor</small></div>
+            <div class="tooltip tooltip-jiyu-pid">StudentMain.exe PIDï¼š<span id="status_jiyu_pid">æœªçŸ¥</span><br /><small>ç‚¹å‡»ç»“æŸæåŸŸç”µå­æ•™å®¤</small></div>
+            <div class="tooltip tooltip-jiyu-restart"><h4>æåŸŸä½ç½®</h4><span id="status_jiyu_path">æœªæ‰¾åˆ°æåŸŸç”µå­æ•™å®¤</span></div>
+            <div class="tooltip tooltip-topmost" id="tooltip_top">çª—å£ç½®é¡¶</div>
+            <div class="tooltip tooltip-sets">è®¾ç½®ä¸æ—¥å¿—</div>
+            <div class="tooltip tooltip-power">ç”µæº</div>
+            <div class="tooltip tooltip-protect-stat" id="status_protect">æ‚¨æœªå—åˆ°æåŸŸç”µå­æ•™å®¤çš„æ§åˆ¶</div>
         </div>
-        <!--µ×À¸-->
+
         <div class="window-footer-area">
-            <!--¹ØÓÚ°´Å¥-->
-            <a class="btn-footers btn-about" id="btn_about" href="#"></a>
-            <!--µ×À¸ÇøÓò-->
+            <a class="btn-footers protect-stat no-danger" id="btn_protect_stat"></a>
             <div class="btn-footers-area">
-                <a class="btn-footers protect-stat no-danger" id="btn_protect_stat"></a>
                 <a class="btn-footers btn-top" id="btn_top" href="#"></a>
                 <a class="btn-footers btn-kill" id="btn_kill" href="#" style="display:none;"></a>
                 <a class="btn-footers btn-restart" id="btn_restart" href="#"></a>
                 <a class="btn-footers btn-debug" id="btn_debug" href="#"></a>
                 <a class="btn-footers btn-power" id="btn_power" href="#"></a>
-                <span class="version"><img src="res:version-text.png" /></span>
+                <a class="btn-footers btn-about" id="btn_about" href="#"></a>
+                <div class="version"><b>v1.7.6</b><span>Jare-Li</span></div>
             </div>
         </div>
-        <!--À©Õ¹ÇøÓò-->
+
         <div class="window-extend-area" id="extend_area">
-            <!--Tab °´Å¥-->
             <div class="window-tab-con">
                 <div class="window-tab">
-                    <a class="btn-tab active" href="#" id="btn_tab_setting" style="width: 30px">ÉèÖÃ</a><a class="btn-tab" href="#" id="btn_tab_debug" style="width: 30px;">µ÷ÊÔ</a><a class="btn-tab" href="#" id="btn_tab_about" style="width: 30px;">¹ØÓÚ</a>
+                    <a class="btn-tab active" href="#" id="btn_tab_setting">è®¾ç½®</a>
+                    <a class="btn-tab" href="#" id="btn_tab_debug">è°ƒè¯•</a>
+                    <a class="btn-tab" href="#" id="btn_tab_about">å…³äº</a>
                 </div>
             </div>
-            <!--Tab ¹Ø±Õ-->
-            <a href="#" id="link_close_extend_area" class="btn-close-extend-area"><i>&nbsp;</i></a>
-            <!--Tab ÇøÓò-->
+            <a href="#" id="link_close_extend_area" class="btn-close-extend-area">Ã—</a>
+
             <div class="window-page active" id="page_setting">
-                <h4 class="mb-0">³ÌĞòÅäÖÃ</h4>
-                <div class="from-group">
-
-                    <div style="width: 180px;" class="form-check" title=" ÊÇ·ñ¼à¿Ø¼«ÓòÔËĞĞ½ø³Ì£¬Í¨³£½ÌÊ¦¿ÉÒÔÍ¨¹ı¼«ÓòÔ¶³ÌÖ´ĞĞÓ¦ÓÃ³ÌĞò£¬Èç¹ûÄã¹´Ñ¡´ËÏîÔò»á¼à¿Ø¼«ÓòÔËĞĞ½ø³Ì£¬Äã¿ÉÒÔÑ¡ÔñÔÊĞí»ò×èÖ¹½ÌÊ¦ÔÚ´ËµçÄÔÉÏÔËĞĞ³ÌĞò">
-                        <input type="checkbox" id="check_allow_op" checked="checked" />
-                        <label for="check_allow_op">¼à¿Ø¼«ÓòÔËĞĞ½ø³Ì</label>
-                    </div>
-                    <div class="form-check" style="width: 150px;" title="¹´Ñ¡´ËÑ¡Ïîºó¼«ÓòÔËĞĞ³ÌĞò»òCMD½«²»»áÌáĞÑÄú¶øÊÇÖ±½Ó¾Ü¾ø£¨ÓÃ¼«Óò´ò¿ªÎÄ¼şÒ²²»ÄÜ£©">
-                        <input type="checkbox" id="check_band_op">
-                        <label for="check_band_op">½ûÖ¹¼«ÓòÔËĞĞ½ø³Ì</label>
-                    </div>
-
-                    <div class="form-check" style="width: 180px;" title="Èç¹ûÄãĞèÒª½«ÆÁÄ»¹ã²¥´°¿ÚÖÃ¶¥£¬Çë¹´Ñ¡´ËÑ¡Ïî£¬È»ºóÔÚÆÁÄ»¹ã²¥ÖĞÑ¡ÔñÖÃ¶¥¡£±¾Èí¼şÄ¬ÈÏ²»ÔÊĞíÆÁÄ»¹ã²¥´°¿ÚÖÃ¶¥">
-                        <input type="checkbox" id="check_allow_top" />
-                        <label for="check_allow_top">ÔÊĞíÆÁÄ»¹ã²¥´°¿ÚÖÃ¶¥</label>
-                    </div>
-                    <div style="width: 140px;" class="form-check" title="ÊÇ·ñÔÊĞí½ÌÊ¦Í¨¹ı¼«Óò½áÊøÄúµçÄÔÉÏµÄ½ø³Ì£¬Ä¬ÈÏ²»ÔÊĞí¡£">
-                        <input type="checkbox" id="check_probit_terminate_process" checked="checked" />
-                        <label for="check_probit_terminate_process">½ûÖ¹¼«Óò½áÊø½ø³Ì</label>
-                    </div>
-
-                    <div class="form-check" style="width: 180px;" title="È¡Ïû¹´Ñ¡´ËÑ¡Ïîºó½ÌÊ¦½«ÎŞ·¨Í¨¹ı¼«Óò²é¿´ÄãµÄµçÄÔÆÁÄ»¡£Ä¬ÈÏÔÊĞí´ËÑ¡Ïî">
-                        <input type="checkbox" id="check_allow_monitor" />
-                        <label for="check_allow_monitor">ÔÊĞí½ÌÊ¦¼àÊÓÄãµÄµçÄÔ</label>
-                    </div>
-                    <div class="form-check" style="width: 140px;" title="ÊÇ·ñÔÊĞí½ÌÊ¦Í¨¹ı¼«Óò¹Ø±ÕÄúµçÄÔÉÏµÄ´°¿Ú£¬Ä¬ÈÏ²»ÔÊĞí¡£ ">
-                        <input type="checkbox" id="check_probit_close_window" />
-                        <label for="check_probit_close_window">½ûÖ¹¼«Óò¹Ø±Õ´°¿Ú</label>
-                    </div>
-
-                    <div class="form-check" style="width: 180px;" title="¹´Ñ¡´ËÑ¡Ïîºó½ÌÊ¦¿ÉÍ¨¹ı¼«Óò¿ØÖÆÄúµÄµçÄÔ¡£Ä¬ÈÏ²»ÔÊĞí´ËÑ¡Ïî">
-                        <input type="checkbox" id="check_allow_control" />
-                        <label for="check_allow_control">ÔÊĞí½ÌÊ¦¿ØÖÆÄãµÄµçÄÔ</label>
-                    </div>
-                    <div class="form-check" style="width: 140px;">
-                        <input type="checkbox" id="check_auto_update">
-                        <label for="check_auto_update">×Ô¶¯¸üĞÂÈí¼ş</label>
-                    </div>
-
-                    <div class="form-item" style="margin-top: 6px; ">
-                        <a href="#" id="link_unload_netfilter" class="cfg-link cfg-link-left text-info" style="margin-left: 30px" title="±¾¹¦ÄÜ¿ÉÒÔĞ¶ÔØ¼«ÓòµÄÍøÂç¹ıÂËÇı¶¯£¬À´·ÀÖ¹½ÌÊ¦Í¨¹ı¼«ÓòÏŞÖÆÄúµçÄÔµÄÉÏÍø¡£±¾¹¦ÄÜ¿ª»úºóĞ¶ÔØÒ»´Î¼´¿É¡£">½â³ıÍøÂç¿ØÖÆ</a>
-                        <a href="#" id="link_read_jiyu_password2" class="cfg-link cfg-link-right text-info" title="±¾Èí¼ş¿É³¢ÊÔÆÆ½â¼«Óòµç×Ó½ÌÊÒµÄĞ¶ÔØºÍ½âËøÃÜÂë">ÆÆ½â¼«ÓòµÄÃÜÂë</a>
-                    </div>
-                    <div class="form-item">
-                        <a href="#" id="link_attact" class="cfg-link cfg-link-left text-info" style="margin-left: 30px;width:150px" title="Êı¾İ°ü(udp)ÖØ·Å¹¥»÷¹¦ÄÜ£¬¸Ã¹¦ÄÜÔ­ÀíÓÉht0RuialÌá¹©">ÖØ·Å¹¥»÷(by ht0Ruial)</a>
-
-                    </div>
-                    <div class="form-item">
-                        <a href="#" id="link_more_settings" class="cfg-link cfg-link-left text-info" style="margin-left: 30px">Èí¼ş¸ß¼¶ÅäÖÃ</a>
-                        <a href="#" id="link_locate_jiyu_position" class="cfg-link cfg-link-right text-info" title="Èç¹û±¾Èí¼ş²¢Ã»ÓĞÕÒµ½¼«Óòµç×Ó½ÌÊÒ»òÕßÊÇÑ°ÕÒµÄÂ·¾¶²»ÕıÈ·£¬Äú¿ÉÒÔÊÖ¶¯Ñ¡Ôñ">Ñ¡Ôñ¼«ÓòÖ÷½ø³ÌÎ»ÖÃ</a>
-                    </div>
-
+                <h4>ä¿æŠ¤è®¾ç½®</h4>
+                <div class="tool-links">
+                    <a href="#" class="tool-link" id="link_attact">UDP é‡æ”¾</a>
+                    <a href="#" class="tool-link" id="link_unload_netfilter">è§£é™¤ç½‘ç»œæ§åˆ¶</a>
+                    <a href="#" class="tool-link" id="link_read_jiyu_password2">è¯»å–æåŸŸå¯†ç </a>
+                    <a href="#" class="tool-link" id="link_locate_jiyu_position">æŒ‡å®šæåŸŸä½ç½®</a>
+                    <a href="#" class="tool-link" id="link_more_settings">é«˜çº§é…ç½®</a>
                 </div>
-                <div class="text-center" style="margin-top:14px;">
-                    <a href="#" id="link_save_setting" class="btn-common">±£´æÉèÖÃ</a>&nbsp;
-                    <a href="#" id="link_setto_default" class="btn-common">»Ö¸´Ä¬ÈÏ</a>&nbsp;
+                <h5>é˜²æŠ¤é€‰é¡¹</h5>
+                <div class="check-row">
+                    <input type="checkbox" id="check_allow_op" checked="checked" />
+                    <label for="check_allow_op">ç›‘æ§æåŸŸè¿è¡Œè¿›ç¨‹</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_band_op" />
+                    <label for="check_band_op">ç¦æ­¢æåŸŸè¿è¡Œè¿›ç¨‹</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_allow_top" />
+                    <label for="check_allow_top">å…è®¸å±å¹•å¹¿æ’­çª—å£ç½®é¡¶</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_probit_terminate_process" checked="checked" />
+                    <label for="check_probit_terminate_process">ç¦æ­¢æåŸŸç»“æŸè¿›ç¨‹</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_allow_monitor" />
+                    <label for="check_allow_monitor">å…è®¸æ•™å¸ˆç›‘è§†ä½ çš„ç”µè„‘</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_probit_close_window" />
+                    <label for="check_probit_close_window">ç¦æ­¢æåŸŸå…³é—­çª—å£</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_allow_control" />
+                    <label for="check_allow_control">å…è®¸æ•™å¸ˆæ§åˆ¶ä½ çš„ç”µè„‘</label>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="check_auto_update" />
+                    <label for="check_auto_update">è‡ªåŠ¨æ£€æŸ¥æ›´æ–°</label>
+                </div>
+                <p class="settings-note">é»˜è®¤é…ç½®å·²åå‘ä¿æŠ¤æœ¬æœºï¼›ä¿®æ”¹åè¯·ç‚¹å‡»â€œä¿å­˜è®¾ç½®â€ã€‚</p>
+                <div class="text-center" style="margin-top:8px;">
+                    <a href="#" id="link_save_setting" class="btn-common btn-primary">ä¿å­˜è®¾ç½®</a>
+                    <a href="#" id="link_setto_default" class="btn-common ml-2">æ¢å¤é»˜è®¤</a>
                 </div>
             </div>
+
             <div class="window-page" id="page_debug">
-                <h4 class="mb-0">³ÌĞòÊä³öºÍµ÷ÊÔÃüÁî</h4>
-                <div id="status_area">
-                </div>
-                <div style="margin-top:5px;">
-                    <input id="input_cmd" style="width:200px;" />&nbsp;
-                    <a href="#" class="btn-common" id="link_runcmd">Ö´ĞĞ</a>
-                    <a href="#" class="btn-common" id="link_more_cmd" title="²âÊÔÃüÁî">¡ø</a>
+                <h4>è¿è¡Œæ—¥å¿—ä¸è°ƒè¯•</h4>
+                <div id="status_area"></div>
+                <div style="margin-top:8px;">
+                    <input id="input_cmd" placeholder="è¾“å…¥è°ƒè¯•å‘½ä»¤" />
+                    <a href="#" class="btn-common" id="link_runcmd">æ‰§è¡Œ</a>
+                    <a href="#" class="btn-common" id="link_more_cmd" title="æŸ¥çœ‹å¯ç”¨å‘½ä»¤">å‘½ä»¤</a>
                 </div>
             </div>
+
             <div class="window-page" id="page_about">
-                <div style="position: absolute; display: block; left: 0px; top: -20px; right: 0;">
-                    <img src="res:logo128.png" style="width:100px; height:100px;border-radius: 30px; box-shadow: 0 0 13px rgba(0,0,0,.5); background-color: #fff;" />
+                <div class="about-head">
+                    <img src="res:logo128.png" />
+                    <div class="about-title">JiYu Trainer</div>
+                    <div class="about-sub">v1.7.6 Â· Jare-Li Refactor Â· MIT License</div>
                 </div>
-                <div style="margin-top: 70px">
-                    <img src="res:logo-text.png" style="width:230px; height:auto" />
+                <div class="about-credits">
+                    åŸä½œï¼š<b>å¿«ä¹çš„æ¢¦é±¼ï¼ˆimengyuï¼‰</b><br />
+                    é‡æ„ä¸ç•Œé¢ï¼š<b>Jare-Li</b><br />
+                    æ”»å‡»æ¨¡å—åŸç†ï¼š<b>ht0Ruial</b>ï¼ˆåŸæ ·ä¿ç•™ï¼‰<br />
+                    æœ¬é¡¹ç›®åŸºäº imengyu/JiYuTrainer 1.7.6 çš„ MIT æºç é‡æ„ï¼Œä¿ç•™åŸä½œè€…ç‰ˆæƒå£°æ˜ã€‚
                 </div>
-                <div style="text-align:center">
-                    V.1.7.6.0515
-                    &copy; 2021 ¿ìÀÖµÄÃÎÓã
+                <div class="about-links">
+                    <a href="#" id="link_help">è½¯ä»¶å¸®åŠ©</a>
+                    <a href="#" id="link_checkupdate">æ£€æŸ¥æ›´æ–°</a>
+                    <a href="#" id="link_github">ä¸Šæ¸¸é¡¹ç›®</a>
+                    <a href="#" id="link_uninstall" style="color:#b45309;">å¸è½½è½¯ä»¶</a>
                 </div>
-                <br />
-                <a href="#" id="link_help" class="link">Èí¼ş°ïÖú</a>&nbsp;|&nbsp;<a href="#" id="link_checkupdate" class="link">¼ì²é¸üĞÂ</a>&nbsp;<!--|&nbsp;<a href="#" id="link_github" class="link">Github</a>&nbsp;-->|&nbsp;<a href="#" id="link_uninstall" class="link" style="color: rgb(228, 126, 0);font-size: 12px;" title="´Ó´Ë¼ÆËã»úÉÏĞ¶ÔØ JiYu Trainer ">Ğ¶ÔØÈí¼ş</a><br />
-                <br />
-                <div class="alert alert-success">
-                    ÄãÏ²»¶ JiYu Trainer Âğ£¿Èç¹ûÄãÏ²»¶£¬²»·ÁÏòÄãµÄºÃÓÑÍÆ¼öÒ»ÏÂÕâ¸öÈí¼ş°É£¡
+                <div class="about-note">
+                    æœ¬è½¯ä»¶ç”¨äºæ¢å¤æœ¬æœºåœ¨æœºæˆ¿ç¯å¢ƒä¸­çš„æ“ä½œè‡ªç”±ï¼Œè¯·éµå®ˆå­¦æ ¡ä¸å®éªŒå®¤è§„å®šã€‚UDP é‡æ”¾åŠŸèƒ½ä»…ä¿ç•™åŸä½œè¡Œä¸ºï¼Œè¯·å‹¿ç”¨äºæœªæˆæƒçš„ç¬¬ä¸‰æ–¹è®¾å¤‡ã€‚
                 </div>
             </div>
         </div>
-        <!--À©Õ¹ÇøÓò½áÊø-->
-        <!--ÆÕÍ¨ÌáÊ¾¿ò-->
+
         <div class="window-extend-area with-mask upper" id="common_message">
-            <a href="#" class="title-close black" id="common_message_close"></a>
-            <h3 id="common_message_title">²âÊÔÏûÏ¢</h3>
-            <p id="common_message_text">²âÊÔÏûÏ¢ÎÄ×Ö£¬³¢ÊÔ DEBUG</p>
-            <div class="text-right" style="position: absolute;bottom: 0; left: 15px; right: 15px; height :45px;">
-                <a href="#" class="btn-common btn-primary" id="common_message_close2">ÎÒÖªµÀÁË</a>
+            <a href="#" class="title-close" id="common_message_close">Ã—</a>
+            <h3 id="common_message_title">æç¤º</h3>
+            <p id="common_message_text"></p>
+            <div class="modal-actions">
+                <a href="#" class="btn-common btn-primary" id="common_message_close2">æˆ‘çŸ¥é“äº†</a>
             </div>
         </div>
         <div class="window-extend-area-mask upper"></div>
-        <!--¸ü¶àÃüÁîÌáÊ¾¿ò-->
-        <div class="window-extend-area with-mask upper" id="cmds_message" style="bottom: 90px; top :30px; left: -15px; right: -15px; padding: 10px 20px; ">
-            <a href="#" class="title-close black" id="cmds_message_close"></a>
-            <h3>µ÷ÊÔÃüÁî</h3>
-            <p class="text-danger">ÒÔÏÂÃüÁî½ö¹©µ÷ÊÔÊ¹ÓÃ£¬²¿·Ö¿ÉÄÜ´æÔÚÎ£ÏÕ</p>
+
+        <div class="window-extend-area with-mask upper" id="cmds_message">
+            <a href="#" class="title-close" id="cmds_message_close">Ã—</a>
+            <h3>è°ƒè¯•å‘½ä»¤</h3>
+            <p style="margin:0 0 8px 0;font-size:10px;color:#b45309;">ä»¥ä¸‹å‘½ä»¤ä»…ä¾›è°ƒè¯•ï¼Œéƒ¨åˆ†æ“ä½œå­˜åœ¨é£é™©</p>
             <div id="commands_help_area">
-                <span>killst É±ËÀ¼«Óòµç×Ó½ÌÊÒ</span><br />
-                <span>rerunst ÖØĞÂÔËĞĞ¼«Óòµç×Ó½ÌÊÒ</span><br />
-                <span>kill [pid] ½áÊøÖ¸¶¨ pid µÄ½ø³Ì</span><br />
-                <span>findps [processName] ²éÕÒÖ¸¶¨Ãû³ÆµÄ½ø³Ì pid</span><br />
-                <span>ss ²éÍ¨Öª¼«Óò²¡¶¾¶ËÇ¿ÖÆ±¬ÆÆ</span><br />
-                <span>sss Á¢¼´¹Ø»ú</span><br />
-                <span>ssr Á¢¼´ÖØÆô</span><br />
-                <span>sst [second] ¶¨Ê±ÔÚÖ¸¶¨ second Ãëºó¹Ø»ú</span><br />
-                <span>ssss ÄÚºË¹Ø»ú</span><br />
-                <span>sssr ÄÚºËÖØÆô</span><br />
-                <span>ckend ·ÖÀë±¾³ÌĞòÓë¼«Óò</span><br />
-                <span>whereisi ÏÔÊ¾µ±Ç°³ÌĞòÄ¿Â¼</span><br />
-                <span>version ÏÔÊ¾µ±Ç°³ÌĞò°æ±¾</span><br />
-                <span>testupdate ²âÊÔÉı¼¶Ä£¿é</span><br />
-                <span>crash ²âÊÔ±ÀÀ£</span><br />
-                <span>exit Ç¿ÖÆÍË³ö³ÌĞò</span><br />
-                <a href="#" id="link_hide">hide Òş²ØÖ÷½çÃæ</a><br />
-                <a href="#" id="link_read_jiyu_password" class="text-info">jypasswd ÆÆ½â¼«ÓòÃÜÂë</a><br />
-                <span>uj Ç¿ÖÆ´Ó¼«ÓòĞ¶ÔØÒÑ×¢ÈëµÄ²¡¶¾</span><br />
-                <span>inspector Æô¶¯ UI µ÷ÊÔÆ÷</span><br />
-                <span>fuljydrv Ç¿ÖÆĞ¶ÔØ¼«ÓòµÄ±£»¤Çı¶¯ <span class="text-danger">(ÓĞÀ¶ÆÁ·çÏÕ É÷ÓÃ)</span></span><br />
-                <span>unloaddrv Ğ¶ÔØ±¾Èí¼şµÄÇı¶¯</span><br />
+                <span>killst ç»“æŸæåŸŸç”µå­æ•™å®¤</span>
+                <span>rerunst é‡æ–°è¿è¡ŒæåŸŸç”µå­æ•™å®¤</span>
+                <span>kill [pid] ç»“æŸæŒ‡å®šè¿›ç¨‹</span>
+                <span>findps [name] æŸ¥æ‰¾è¿›ç¨‹ PID</span>
+                <span>ss é€šçŸ¥æåŸŸç«¯å¼ºåˆ¶çˆ†ç ´</span>
+                <span>sss ç«‹å³å…³æœº</span>
+                <span>ssr ç«‹å³é‡å¯</span>
+                <span>sst [sec] å®šæ—¶å…³æœº</span>
+                <span>ssss å†…æ ¸å…³æœº</span>
+                <span>sssr å†…æ ¸é‡å¯</span>
+                <span>ckend åˆ†ç¦»æœ¬ç¨‹åºä¸æåŸŸ</span>
+                <span>whereisi æ˜¾ç¤ºç¨‹åºç›®å½•</span>
+                <span>version æ˜¾ç¤ºç‰ˆæœ¬</span>
+                <span>testupdate æµ‹è¯•å‡çº§æ¨¡å—</span>
+                <span>crash æµ‹è¯•å´©æºƒ</span>
+                <span>exit å¼ºåˆ¶é€€å‡º</span>
+                <a href="#" id="link_hide">hide éšè—ä¸»ç•Œé¢</a>
+                <a href="#" id="link_read_jiyu_password">jypasswd è¯»å–æåŸŸå¯†ç </a>
+                <span>uj ä»æåŸŸå¸è½½å·²æ³¨å…¥æ¨¡å—</span>
+                <span>inspector å¯åŠ¨ UI è°ƒè¯•å™¨</span>
+                <span>fuljydrv å¼ºåˆ¶å¸è½½æåŸŸä¿æŠ¤é©±åŠ¨ <span class="text-danger">(æœ‰è“å±é£é™©)</span></span>
+                <span>unloaddrv å¸è½½æœ¬è½¯ä»¶é©±åŠ¨</span>
             </div>
-
         </div>
         <div class="window-extend-area-mask upper"></div>
-        <!--³õ´ÎÌáÊ¾¿ò-->
+
         <div class="window-extend-area with-mask upper" id="hello_message">
-            <a href="#" id="link_close_hello_message" class="btn-close-extend-area"><i>&nbsp;</i></a>
+            <a href="#" id="link_close_hello_message" class="btn-close-extend-area">Ã—</a>
+            <h3>æ¬¢è¿ä½¿ç”¨</h3>
+            <p style="font-size:11px;line-height:17px;color:#475569;">ä¸»ç•Œé¢ä¼šè‡ªåŠ¨æ¥ç®¡æåŸŸçš„å±å¹•å¹¿æ’­ã€‚å…³é—­çª—å£ä¼šéšè—åˆ°æ‰˜ç›˜ï¼ŒæŒ‰çƒ­é”®å¯å¿«é€Ÿå‘¼å‡ºã€‚</p>
+        </div>
+        <div class="window-extend-area-mask upper"></div>
 
+        <div class="window-extend-area with-mask upper" id="power_message">
+            <a href="#" id="link_close_power_message" class="btn-close-extend-area">Ã—</a>
+            <h3>ç”µæºä¸é€€å‡º</h3>
+            <a class="op-item" id="link_shutdown" href="#"><span class="op-icon">â»</span><span>å…³é—­è®¡ç®—æœº</span></a>
+            <a class="op-item" id="link_reboot" href="#"><span class="op-icon">â†»</span><span>é‡å¯è®¡ç®—æœº</span></a>
+            <a class="op-item" id="link_exit" href="#"><span class="op-icon">Ã—</span><span>é€€å‡ºæœ¬è½¯ä»¶</span></a>
         </div>
         <div class="window-extend-area-mask upper"></div>
-        <!--µçÔ´ÌáÊ¾¿ò-->
-        <div class="window-extend-area with-mask upper" id="power_message" style="bottom: 130px; top :105px; left: -10px; right: -10px; padding: 10px 20px; ">
-            <a href="#" id="link_close_power_message" class="btn-close-extend-area"><i>&nbsp;</i></a>
-            <h3>Ñ¡ÔñÒªÖ´ĞĞµÄ²Ù×÷</h3>
-            <a class="op-item" id="link_shutdown" href="#">
-                <img class="shutdown" />
-                <span>¹Ø±Õ¼ÆËã»ú</span>
-            </a>
-            <a class="op-item" id="link_reboot" href="#">
-                <img class="reboot" />
-                <span>ÖØÆô¼ÆËã»ú</span>
-            </a>
-            <a class="op-item" id="link_exit" href="#">
-                <img class="quit" />
-                <span>ÍË³ö±¾Èí¼ş</span>
-            </a>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-        <!--¸üĞÂÌáÊ¾¿ò-->
+
         <div class="window-extend-area with-mask upper" id="update_message">
             <div class="new-ver">
-                <span class="text">·¢ÏÖÈí¼şĞÂ°æ±¾</span>
-                <span class="ver"><span id="update_message_newver"></span> ¸üĞÂÄÚÈİ</span>
+                <span class="text">å‘ç°æ–°ç‰ˆæœ¬</span>
+                <span class="ver"><span id="update_message_newver"></span> æ›´æ–°å†…å®¹</span>
             </div>
-            <p id="update_message_text">
-            </p>
-            <p style="position: absolute;bottom: 60px; left: 15px; right: 15px; height :28px;text-align:center; font-size: 12px;color:rgb(108, 117, 125)">¸üĞÂµ½×îĞÂ°æ±¾£¬¿ÉÒÔ»ñµÃ¸üÎÈ¶¨µÄÊ¹ÓÃÌåÑé£¡<br />¸üĞÂ¹ı³ÌÖĞ»áÔİÊ±¹Ø±Õ¼«Óò</p>
-            <div class="text-right" style="position: absolute;bottom: 0; left: 15px; right: 15px; height :45px;text-align:center;">
-                <a href="#" class="btn-common btn-primary" id="update_message_update">Á¢¼´¸üĞÂ!</a>
-                <a href="#" class="btn-common ml-2" id="update_message_close">ÏÂ´ÎÔÙËµ</a>
+            <p id="update_message_text"></p>
+            <div class="modal-actions">
+                <a href="#" class="btn-common btn-primary" id="update_message_update">ç«‹å³æ›´æ–°</a>
+                <a href="#" class="btn-common ml-2" id="update_message_close">ä¸‹æ¬¡å†è¯´</a>
             </div>
         </div>
         <div class="window-extend-area-mask upper"></div>
-        <!--¸üĞÂ×îĞÂÌáÊ¾¿ò-->
+
         <div class="window-extend-area with-mask upper" id="isnew_message">
             <div class="new-ver">
-                <span class="text">¼ì²â¸üĞÂ</span>
-                <span class="ver" id="isnew_message_title">ÄãµÄ JiYuTrainer ÊÇ×îĞÂµÄ°æ±¾£¡</span>
+                <span class="text">æ£€æŸ¥æ›´æ–°</span>
+                <span class="ver" id="isnew_message_title">å·²æ˜¯æœ€æ–°ç‰ˆæœ¬</span>
             </div>
-            <p id="isnew_message_text">
-            </p>
-            <div class="text-right" style="position: absolute;bottom: 0; left: 15px; right: 15px; height :45px;text-align:center;">
-                <a href="#" class="btn-common btn-primary" id="isnew_message_close">¹Ø±Õ</a>
+            <p id="isnew_message_text"></p>
+            <div class="modal-actions">
+                <a href="#" class="btn-common btn-primary" id="isnew_message_close">å…³é—­</a>
             </div>
         </div>
         <div class="window-extend-area-mask upper"></div>
-        <!--ÍË³öÌáÊ¾¿ò-->
-        <div class="window-extend-area with-mask upper" id="exit_message" style="bottom: 135px; top :135px; left: -10px; right: -10px; padding: 10px 20px;">
-            <a href="#" class="btn-close-extend-area" id="exit_message_close"><i>&nbsp;</i></a>
-            <h3>¼«ÓòÕıÔÚÔËĞĞ£¬ÄúÊÇ·ñ»¹ÒªÍË³ö£¿</h3>
-            <p>
-                µ±Ç°ÕıÔÚ¿ØÖÆ¼«Óò£¬ÍË³öÈí¼ş»á·Ç³£²»°²È«¡£
-                <br />Äã¿ÉÒÔÑ¡ÔñÇ¿ÖÆ·ÖÀë¼«Óò£¬µ«»áµ¼ÖÂ¼«ÓòÍÑÀë¿ØÖÆ(²»ÍÆ¼ö)£»Ò²¿ÉÒÔÑ¡ÔñÍË³ö±¾Èí¼ş£¬²¢É±ËÀ¼«Óò¡£
-            </p>
-            <div class="text-right" style="position: absolute;bottom: 0; left: 0px; right: 15px; height :45px;">
-                <a href="#" class="btn-common btn-secondary" id="exit_message_kill_and_exit">É±ËÀ¼«ÓòÍË³ö</a>
-                <a href="#" class="btn-common" id="exit_message_end_ctl_and_exit">·ÖÀë¼«ÓòÍË³ö(²»ÍÆ¼ö)</a>
-                <a href="#" class="btn-common btn-primary" id="exit_message_close2">È¡Ïû</a>
+
+        <div class="window-extend-area with-mask upper" id="exit_message">
+            <a href="#" class="btn-close-extend-area" id="exit_message_close">Ã—</a>
+            <h3>æåŸŸæ­£åœ¨è¿è¡Œï¼Œä»è¦é€€å‡ºï¼Ÿ</h3>
+            <p>å½“å‰æ­£åœ¨æ¥ç®¡æåŸŸã€‚é€€å‡ºä¼šé™ä½ä¿æŠ¤ï¼›å»ºè®®å…ˆç»“æŸæåŸŸï¼Œæˆ–åˆ†ç¦»åå†é€€å‡ºã€‚</p>
+            <div class="modal-actions">
+                <a href="#" class="btn-common btn-secondary" id="exit_message_kill_and_exit">ç»“æŸæåŸŸå¹¶é€€å‡º</a>
+                <a href="#" class="btn-common" id="exit_message_end_ctl_and_exit">åˆ†ç¦»åé€€å‡º</a>
+                <a href="#" class="btn-common btn-primary" id="exit_message_close2">å–æ¶ˆ</a>
             </div>
         </div>
         <div class="window-extend-area-mask upper"></div>
@@ -1137,7 +963,7 @@
                 });
             }
         }
-        /*$(#link_github).onClick = function (){ view.toGithub();  }*/
+        $(#link_github).onClick = function () { view.toGithub(); }
         $(#link_more_cmd).onClick = function (){ $(#cmds_message).attributes.addClass("shown");  }
         $(#link_close_power_message).onClick = function (){ common_close_extend_area($(#power_message));  }
         $(#link_close_hello_message).onClick = function (){ common_close_extend_area($(#hello_message));  }
@@ -1318,6 +1144,5 @@
         });
 
     </script>
-
 </body>
 </html>

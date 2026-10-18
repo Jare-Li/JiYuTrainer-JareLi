@@ -1,0 +1,339 @@
+{
+  "date": "2026-10-18T16:29:43",
+  "passed": 66,
+  "failed": 0,
+  "total": 66,
+  "pass_rate": 100.0,
+  "tests": [
+    {
+      "name": "core/ip_valid_basic",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_valid_bounds",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_invalid_256",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_invalid_short",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_invalid_five",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_invalid_letters",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_invalid_empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_invalid_inner_space",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_trim_ok",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/ip_leading_zero_ok",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/split_two",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/split_spaces_and_empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/split_empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/trim",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_header_0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_header_1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_header_2",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_header_3",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_hash_0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_hash_1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_hash_2",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/basepack_hash_3",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_control_offsets",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_message_offset",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_message_prefix",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_message_zero_tail",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_command_offset",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_command_prefix",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_unicode_utf16le",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_shutdown_ignores_payload",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_command_max_chars",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_command_capped",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/packet_sizes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/summary",
+      "ok": true,
+      "detail": "33 passed, 0 failed"
+    },
+    {
+      "name": "artifact/exe_exists",
+      "ok": true,
+      "detail": "4801864 bytes"
+    },
+    {
+      "name": "artifact/hook_exists",
+      "ok": true,
+      "detail": "668488 bytes"
+    },
+    {
+      "name": "artifact/sciter_exists",
+      "ok": true,
+      "detail": "5955632 bytes"
+    },
+    {
+      "name": "artifact/build_script",
+      "ok": true,
+      "detail": "build.ps1"
+    },
+    {
+      "name": "artifact/test_script",
+      "ok": true,
+      "detail": "tests/run_tests.py"
+    },
+    {
+      "name": "pe/exe_x86_gui",
+      "ok": true,
+      "detail": "machine=0x014C subsystem=2"
+    },
+    {
+      "name": "pe/hook_x86",
+      "ok": true,
+      "detail": "machine=0x014C"
+    },
+    {
+      "name": "version/readable",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version/company_jareli",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version/description_jareli",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version/copyright",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version/file_version",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version/product_name",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "signature/present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "signature/subject_jareli",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/main_ids_complete",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/main_no_duplicate_ids",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/main_version_label",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/main_window_title",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/main_res_refs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/attack_ids_complete",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/attack_warning",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/attack_preserved_label",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "feature/handlers_present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "attack/packet_calls",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "attack/window_methods",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "resource/main_html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "resource/attack_html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legal/mit_license",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legal/readme_attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legal/notice_attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "version/current_constant",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

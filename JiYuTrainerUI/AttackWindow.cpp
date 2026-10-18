@@ -5,14 +5,15 @@
 #include "../JiYuTrainer/SysHlp.h"
 #include "../JiYuTrainer/NetUtils.h"
 #include "../JiYuTrainer/StringSplit.h"
+#include "../JiYuTrainer/IpUtils.h"
 #include "../JiYuTrainer/StringHlp.h"
 #include <regex>
 
 extern int screenWidth, screenHeight;
 
 AttackWindow::AttackWindow(HWND parentHWnd) : 
-	CommonWindow(parentHWnd, 570, 520, 
-		L"JiYuTrainerAttackWindow", L"极域电子教室数据包(udp)重放攻击 - by ht0Ruial",
+	CommonWindow(parentHWnd, 620, 640, 
+		L"JiYuTrainerAttackWindow", L"UDP 重放攻击 - 原样保留 (by ht0Ruial)",
 		IDR_HTML_ATTACK)
 {
 	init();
@@ -96,7 +97,7 @@ LRESULT AttackWindow::onWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 
 bool AttackWindow::SendCommonCheck(std::vector<std::wstring> *ips, DWORD *port)
 {
-	std::wstring str = input_target_ip.get_value().get(L"");
+	std::wstring str = IpUtils::Trim(input_target_ip.get_value().get(L""));
 	if (str.empty()) {
 		AddStringToReult(L"请输入目标IP地址！");
 		return false;
@@ -108,12 +109,16 @@ bool AttackWindow::SendCommonCheck(std::vector<std::wstring> *ips, DWORD *port)
 		return false;
 	}
 
-	SplitString(str, *ips, L",");
+	*ips = IpUtils::SplitIpList(str);
+	if (ips->empty()) {
+		AddStringToReult(L"请输入目标IP地址！");
+		return false;
+	}
+
 	int i = 0;
-	for (std::wstring ip : *ips) {
+	for (const std::wstring& ip : *ips) {
 		i++;
-		std::wregex express(L"^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
-		if (!std::regex_match(ip.begin(), ip.end(), express)) {
+		if (!IpUtils::IsValidIPv4(ip)) {
 			AddStringToReult(FormatString(L"第%d个IP地址（%s）格式不正确，必须是正确的IPV4地址", i, ip.c_str()).c_str());
 			return false;
 		}

@@ -486,6 +486,7 @@ void MainWindow::OnFirstShow()
 	currentWorker->Init();
 	currentWorker->Start();
 
+
 	//显示重启提示
 	if (currentApp->IsCommandExists(L"r1")) {
 		currentLogger->LogInfo(L"Reboot mode 1");

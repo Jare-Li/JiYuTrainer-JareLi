@@ -22,3 +22,8 @@
 *.enc
 *.recipe
 
+/build/
+/dist/
+/*.zip
+*.pfx
+*.cer

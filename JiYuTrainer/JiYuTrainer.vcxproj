@@ -186,6 +186,8 @@
     <ClInclude Include="SettingHlp.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StringHlp.h" />
+    <ClInclude Include="IpUtils.h" />
+    <ClInclude Include="JyPacket.h" />
     <ClInclude Include="StringSplit.h" />
     <ClInclude Include="SysHlp.h" />
     <ClInclude Include="targetver.h" />
@@ -219,6 +221,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="StringHlp.cpp" />
+    <ClCompile Include="IpUtils.cpp" />
+    <ClCompile Include="JyPacket.cpp" />
     <ClCompile Include="StringSplit.cpp" />
     <ClCompile Include="SysHlp.cpp" />
     <ClCompile Include="TrainerWorker.cpp" />
