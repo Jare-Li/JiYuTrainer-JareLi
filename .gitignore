@@ -47,6 +47,3 @@ password.txt
 # Runtime / binary drops
 *.dll
 *.bat
-
-# Upload staging (not part of source repo)
-/github-upload/

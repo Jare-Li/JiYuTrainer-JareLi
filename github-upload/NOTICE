@@ -1,0 +1,34 @@
+JiYuTrainer 1.7.6 — Jare-Li Refactor
+=====================================
+
+Original project:
+  JiYuTrainer
+  Copyright (c) 2021 快乐的梦鱼 (imengyu)
+  https://github.com/imengyu/JiYuTrainer
+  Licensed under the MIT License (see LICENSE).
+
+Refactor:
+  Copyright (c) 2026 Jare-Li
+  UI redesign, build modernization, test harness, signing and documentation.
+  The original copyright notice and MIT license are retained.
+
+Attack module attribution:
+  The UDP replay module is based on the protocol research by ht0Ruial.
+  https://github.com/ht0Ruial/Jiyu_udp_attack
+
+Third-party components distributed with the upstream project:
+  - Sciter runtime (sciter.dll), Terra Informatica Software, Inc.
+  - curl, https://github.com/curl/curl
+  - mhook, https://github.com/martona/mhook
+  - MemoryModule, https://github.com/fancycode/MemoryModule
+  - XZip/XUnZip, https://github.com/yuanjia1011/XZip-XUnZip
+
+No third-party component has been modified by this refactor.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
