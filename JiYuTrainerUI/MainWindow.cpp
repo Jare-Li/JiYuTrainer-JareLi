@@ -40,7 +40,7 @@ MainWindow::MainWindow()
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	hWndMain = CreateWindow(wndClassName, MAIN_WND_NAME, WS_POPUP, 0, 0, 430, 520, NULL, NULL, currentApp->GetInstance(), this);
+	hWndMain = CreateWindow(wndClassName, MAIN_WND_NAME, WS_POPUP, 0, 0, 960, 540, NULL, NULL, currentApp->GetInstance(), this);
 	if (!hWndMain)
 		return;
 

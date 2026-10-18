@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-18T16:31:17",
-  "passed": 66,
+  "date": "2026-10-18T21:58:02",
+  "passed": 68,
   "failed": 0,
-  "total": 66,
+  "total": 68,
   "pass_rate": 100.0,
   "tests": [
     {
@@ -178,7 +178,7 @@
     {
       "name": "artifact/exe_exists",
       "ok": true,
-      "detail": "4801864 bytes"
+      "detail": "4792648 bytes"
     },
     {
       "name": "artifact/hook_exists",
@@ -267,6 +267,16 @@
     },
     {
       "name": "ui/main_window_title",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/window_16x9_cpp",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/window_16x9_html",
       "ok": true,
       "detail": ""
     },

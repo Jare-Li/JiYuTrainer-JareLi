@@ -5,6 +5,7 @@
 
 - 版本：`1.7.6.0515 (Jare-Li Refactor)`
 - 平台：Windows 7 / 8 / 8.1 / 10 / 11，x86（32 位主程序，可在 64 位系统运行）
+- 主窗口：`960×540`（16:9），左侧状态/功能导航，右侧内容区
 - 许可：MIT（见 `LICENSE`）
 - 签名：自签名 Authenticode 证书 `CN=Jare-Li`（默认不受系统信任）
 
@@ -16,9 +17,9 @@
 |---|---|
 | 保留全部原功能 | 是。主界面、设置、托盘、热键、更新、Hook、驱动、UDP 重放窗口均保留 |
 | 保留攻击模块 | 是。`AttackWindow` / `JyUdpAttack` / 包字节布局原样保留，未增加攻击方式，未修改协议 |
-| 界面简洁 | 主窗口与 UDP 重放窗口重做为浅色卡片式 UI，保留全部原控件与快捷键行为 |
+| 界面简洁 | 主窗口改为 **960×540（16:9）左右分栏**：左侧状态卡片 + 功能导航，右侧显示当前功能；保留浅色配色与原控件行为 |
 | 构建可复现 | 是。VS2022 v143 + Windows SDK，`build.ps1` 一键构建 |
-| 测试通过率 ≥ 90% | 是。**66/66 = 100.0%**（2026-10-18 本机实测） |
+| 测试通过率 ≥ 90% | 是。**68/68 = 100.0%**（2026-10-18 本机实测） |
 | Jare-Li 签名 | 版本信息、关于页署名、自签名 Authenticode 证书三处一致 |
 
 ## 2. 功能清单（全部保留）
@@ -42,7 +43,7 @@
 
 | 文件 | 改动 |
 |---|---|
-| `JiYuTrainerUI/MainWindow.html` | 全新浅色卡片 UI；保留 83 个原 DOM id、全部 C++ 事件绑定与 TIScript 行为 |
+| `JiYuTrainerUI/MainWindow.html` | 16:9 左右分栏 UI：左侧状态 + 功能导航，右侧内容区；保留 83 个原 DOM id、全部 C++ 事件绑定与 TIScript 行为 |
 | `JiYuTrainerUI/AttackWindow.html` | 全新表单式 UI；保留全部原控件 id 与警告文案 |
 | `JiYuTrainer/JyPacket.h/.cpp` | 从 `JyUdpAttack` 抽取纯包构造；`DMOC` 头、4 种基础包、偏移 56/100 与 1.7.6 完全一致 |
 | `JiYuTrainer/IpUtils.h/.cpp` | IPv4 校验与目标列表解析；支持逗号分隔与首尾空格 |
@@ -109,10 +110,10 @@ python tests\run_tests.py
 3. **界面/功能/许可测试**：83 个主界面 id 完整且无重复、攻击窗口 id、功能处理函数、MIT 归属、签名主体。
 
 ```text
-RESULT: 66/66 passed, 0 failed, 100.0%
+RESULT: 68/68 passed, 0 failed, 100.0%
 ```
 
-通过率按“通过数 / 总数”计算，发布门槛为 **≥ 90%**。本次实测 **66/66 = 100.0%**，结果写入 `test-report.md` 与 `test-results.json`。
+通过率按“通过数 / 总数”计算，发布门槛为 **≥ 90%**。本次实测 **68/68 = 100.0%**，结果写入 `test-report.md` 与 `test-results.json`。
 
 ## 6. 签名
 

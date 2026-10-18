@@ -1,9 +1,9 @@
 # Test Report
 
-- Date: 2026-10-18T16:31:17
-- Passed: 66
+- Date: 2026-10-18T21:58:02
+- Passed: 68
 - Failed: 0
-- Total: 66
+- Total: 68
 - Pass rate: 100.0%
 
 | Test | Result | Detail |
@@ -42,7 +42,7 @@
 | `core/packet_command_capped` | PASS |  |
 | `core/packet_sizes` | PASS |  |
 | `core/summary` | PASS | 33 passed, 0 failed |
-| `artifact/exe_exists` | PASS | 4801864 bytes |
+| `artifact/exe_exists` | PASS | 4792648 bytes |
 | `artifact/hook_exists` | PASS | 668488 bytes |
 | `artifact/sciter_exists` | PASS | 5955632 bytes |
 | `artifact/build_script` | PASS | build.ps1 |
@@ -61,6 +61,8 @@
 | `ui/main_no_duplicate_ids` | PASS |  |
 | `ui/main_version_label` | PASS |  |
 | `ui/main_window_title` | PASS |  |
+| `ui/window_16x9_cpp` | PASS |  |
+| `ui/window_16x9_html` | PASS |  |
 | `ui/main_res_refs` | PASS |  |
 | `ui/attack_ids_complete` | PASS |  |
 | `ui/attack_warning` | PASS |  |

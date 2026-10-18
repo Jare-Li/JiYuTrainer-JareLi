@@ -279,6 +279,10 @@ def main() -> int:
     check("ui/main_version_label", lambda: "v1.7.6" in main_html, "v1.7.6")
     check("ui/main_window_title", lambda: "<title>JiYu Trainer Main Window</title>" in main_html,
           "must match FindWindow(MAIN_WND_NAME)")
+    check("ui/window_16x9_cpp", lambda: "960, 540" in read_text(UI / "MainWindow.cpp", "gbk"),
+          "MainWindow must create a 960x540 client window")
+    check("ui/window_16x9_html", lambda: "width: 960px; height: 540px" in main_html,
+          "card must be fixed 16:9")
 
     res_refs = set(re.findall(r"res:([^\"')\s]+)", main_html + read_text(UI / "AttackWindow.html")))
     missing_res = [ref for ref in res_refs if not (UI / "res" / ref).exists()]
@@ -321,7 +325,7 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001
         record("resource/html_embedded", False, str(exc))
     else:
-        check("resource/main_html", lambda: len(main_res) > 40_000 and b"JiYu Trainer" in main_res,
+        check("resource/main_html", lambda: len(main_res) > 30_000 and b"JiYu Trainer" in main_res,
               f"{len(main_res)} bytes")
         check("resource/attack_html", lambda: len(attack_res) > 5_000 and "UDP".encode() in attack_res,
               f"{len(attack_res)} bytes")

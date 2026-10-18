@@ -4,16 +4,11 @@
     <meta charset="utf-8" />
     <title>JiYu Trainer Main Window</title>
     <style>
-        html {
-            background: transparent;
-            overflow: hidden;
-        }
+        html { width: 100%; height: 100%; background: transparent; overflow: hidden; }
         body {
-            margin: 0;
-            padding: 10px;
+            margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
-            color: #1f2937;
-            opacity: .3;
+            color: #1f2937; opacity: .3;
             transition: opacity linear 150ms;
             box-sizing: border-box;
         }
@@ -22,434 +17,183 @@
         * { box-sizing: border-box; }
 
         .window-box {
-            position: relative;
-            width: 100%;
-            height: 500px;
-            background: #ffffff;
-            border-radius: 18px;
-            box-shadow: 0 22px 60px rgba(15, 23, 42, .28);
-            overflow: hidden;
-            border: 1px solid rgba(15, 23, 42, .06);
+            position: relative; width: 960px; height: 540px;
+            background: #ffffff; border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+            overflow: hidden; border: 1px solid rgba(15, 23, 42, .06);
         }
-        .window-area {
-            position: relative;
-            height: 410px;
-            background: #f6f9fd;
+        .window-box.state-work .sidebar { background: #eefbf4; }
+        .window-box.state-warn .sidebar { background: #fff8ed; }
+        .window-box.state-notwork .sidebar { background: #f6f9fd; }
+
+        /* 16:9 split layout */
+        .sidebar {
+            position: absolute; left: 0; top: 0;
+            width: 340px; height: 100%; padding: 16px;
+            background: #f6f9fd; border-right: 1px solid #e2e8f0;
             transition: background-color 180ms linear;
         }
-        .window-box.state-work .window-area { background: #eefbf4; }
-        .window-box.state-warn .window-area { background: #fff8ed; }
-        .window-box.state-notwork .window-area { background: #f6f8fb; }
+        .content {
+            position: absolute; left: 340px; right: 0; top: 0; bottom: 0;
+            padding: 18px 24px 0 24px; background: #ffffff;
+        }
 
-        /* Title bar */
-        .window-title-area {
-            position: relative;
-            height: 52px;
-            padding: 0 52px 0 16px;
-            white-space: nowrap;
-        }
-        #title-icon {
-            position: absolute;
-            left: 16px;
-            top: 16px;
-            width: 20px;
-            height: 20px;
-            border-radius: 6px;
-        }
+        /* Title */
+        .titlebar { position: relative; height: 38px; padding-right: 58px; white-space: nowrap; }
+        #title-icon { position: absolute; left: 0; top: 8px; width: 22px; height: 22px; border-radius: 7px; }
         #title {
-            position: absolute;
-            left: 44px;
-            top: 0;
-            height: 52px;
-            line-height: 52px;
-            margin: 0;
-            font-size: 13px;
-            font-weight: 600;
-            color: #64748b;
-            letter-spacing: .2px;
+            position: absolute; left: 30px; top: 0; height: 38px; line-height: 38px;
+            margin: 0; font-size: 13px; font-weight: 600; color: #475569; letter-spacing: .2px;
         }
-        .title-badge {
-            display: inline-block;
-            margin-left: 6px;
-            padding: 1px 6px;
-            border-radius: 6px;
-            background: #e0f2fe;
-            color: #0369a1;
-            font-size: 10px;
-            font-weight: 600;
-            line-height: 16px;
-            vertical-align: 1px;
+        .badge {
+            display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 6px;
+            background: #e0f2fe; color: #0369a1; font-size: 10px; font-weight: 600;
+            line-height: 16px; vertical-align: 1px;
         }
         .title-min, .title-close {
-            position: absolute;
-            top: 13px;
-            width: 26px;
-            height: 26px;
-            line-height: 24px;
-            text-align: center;
-            border-radius: 8px;
-            color: #94a3b8;
-            text-decoration: none;
-            font-size: 17px;
-            font-family: "Segoe UI", sans-serif;
-            transition: background-color 120ms linear, color 120ms linear;
+            position: absolute; top: 5px; width: 26px; height: 26px; line-height: 24px;
+            text-align: center; border-radius: 8px; color: #94a3b8; text-decoration: none;
+            font-size: 17px; font-family: "Segoe UI", sans-serif;
         }
-        .title-min { right: 46px; }
-        .title-close { right: 14px; }
-        .title-min:hover, .title-close:hover {
-            background: rgba(15, 23, 42, .06);
-            color: #334155;
-        }
+        .title-min { right: 30px; }
+        .title-close { right: 0; }
+        .title-min:hover, .title-close:hover { background: rgba(15, 23, 42, .06); color: #334155; }
 
-        /* Hero / status */
+        /* Status card */
         .main-state {
-            position: relative;
-            height: 358px;
-            padding: 14px 22px 0 22px;
-            text-align: center;
-            overflow: hidden;
+            position: relative; height: 244px; margin-top: 10px; padding: 12px 12px 10px 12px;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+            text-align: center; box-shadow: 0 8px 22px rgba(15, 23, 42, .04);
         }
         .main-state .inner {
-            display: inline-block;
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin-top: 8px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 9px solid rgba(46, 164, 240, .12);
-            box-shadow: 0 10px 26px rgba(15, 23, 42, .06);
+            display: flex; flex-direction: row; align-items: center; justify-content: center;
+            width: 112px; height: 112px; margin: 2px auto 0 auto;
+            border-radius: 50%; background: #ffffff; border: 8px solid rgba(46, 164, 240, .12);
         }
-        .state-work .main-state .inner {
-            border-color: rgba(16, 185, 129, .16);
-        }
-        .state-warn .main-state .inner {
-            border-color: rgba(245, 158, 11, .18);
-        }
+        .state-work .main-state .inner { border-color: rgba(16, 185, 129, .18); }
+        .state-warn .main-state .inner { border-color: rgba(245, 158, 11, .20); }
         #status_icon {
-            display: inline-block;
-            position: absolute;
-            left: 28px;
-            top: 28px;
-            width: 76px;
-            height: 76px;
-            background-image: url(res:states.png);
-            background-repeat: no-repeat;
-            background-size: 532px 76px;
-            background-position: 0 0;
+            display: block; width: 78px; height: 78px;
+            background-image: url(res:states.png); background-repeat: no-repeat;
+            background-size: 546px 78px; background-position: 0 0;
         }
         #status_icon.state-ctl-no-lock { background-position: 0 0; }
-        #status_icon.state-ctl-unlock { background-position: -76px 0; }
-        #status_icon.state-failed { background-position: -152px 0; }
-        #status_icon.state-manual-stop { background-position: -228px 0; }
-        #status_icon.state-not-found { background-position: -304px 0; }
-        #status_icon.state-unknow-problem { background-position: -380px 0; }
-        #status_icon.state-not-run { background-position: -456px 0; }
+        #status_icon.state-ctl-unlock { background-position: -78px 0; }
+        #status_icon.state-failed { background-position: -156px 0; }
+        #status_icon.state-manual-stop { background-position: -234px 0; }
+        #status_icon.state-not-found { background-position: -312px 0; }
+        #status_icon.state-unknow-problem { background-position: -390px 0; }
+        #status_icon.state-not-run { background-position: -468px 0; }
 
         .status-text {
-            display: block;
-            margin-top: 18px;
-            font-size: 20px;
-            line-height: 28px;
-            font-weight: 700;
-            color: #0f172a;
+            display: block; margin-top: 7px; font-size: 18px; line-height: 24px;
+            font-weight: 700; color: #0f172a;
         }
         .status-text2 {
-            display: block;
-            margin-top: 4px;
-            min-height: 20px;
-            font-size: 12px;
-            line-height: 18px;
-            color: #64748b;
+            display: block; margin-top: 1px; min-height: 16px; font-size: 11px;
+            line-height: 16px; color: #64748b;
         }
         .state-work .status-text { color: #047857; }
         .state-warn .status-text { color: #b45309; }
         .state-notwork .status-text { color: #475569; }
 
-        /* Footer */
-        .window-footer-area {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 90px;
-            padding: 0 12px;
-            background: #ffffff;
-            border-top: 1px solid #eef2f7;
-            display: block;
-            line-height: 90px;
-            white-space: nowrap;
+        .jiyu-meta {
+            margin-top: 8px; padding: 6px 8px; border-radius: 9px; background: #f8fafc;
+            border: 1px solid #eef2f7; font-size: 10px; line-height: 15px;
+            color: #64748b; text-align: left; white-space: nowrap; overflow: hidden;
         }
-        .btn-footers-area {
-            display: inline-block;
-            vertical-align: middle;
-            padding-top: 0;
-            line-height: normal;
+        .jiyu-meta .pid { font-weight: 600; color: #334155; }
+        #status_jiyu_path {
+            display: block; margin-top: 1px; color: #94a3b8;
+            overflow: hidden; text-overflow: ellipsis;
         }
-        .btn-footers {
-            display: inline-block;
-            position: relative;
-            width: 40px;
-            height: 40px;
-            margin-right: 3px;
-            border-radius: 12px;
-            background-image: url(res:btn-footers.png);
-            background-repeat: no-repeat;
+
+        /* Function navigation under the status card */
+        .nav { margin-top: 12px; height: 126px; }
+        .nav-item {
+            display: inline-block; width: 140px; height: 36px; line-height: 34px;
+            padding: 0 6px; margin: 0 4px 6px 0; border-radius: 10px;
+            background: #ffffff; border: 1px solid #e2e8f0; color: #334155;
+            font-size: 12px; text-decoration: none; text-align: center;
+            white-space: nowrap; overflow: hidden;
+        }
+        .nav-item:hover { background: #eef6fc; border-color: #bae0fa; color: #0369a1; }
+        .nav-item.active { background: #e0f2fe; border-color: #7dd3fc; color: #0369a1; font-weight: 600; }
+
+        .sidebar-footer { position: absolute; left: 16px; right: 16px; bottom: 10px; }
+        .quick-row { height: 42px; white-space: nowrap; }
+
+        .icon-btn, .btn-footers {
+            display: inline-block; vertical-align: middle; width: 40px; height: 40px;
+            margin-right: 4px; border-radius: 11px; text-decoration: none;
+            background-image: url(res:btn-footers.png); background-repeat: no-repeat;
             background-position: 0 0;
-            text-decoration: none;
-            vertical-align: middle;
-            transition: background-color 120ms linear, transform 120ms linear;
         }
-        .btn-footers:hover {
-            background-color: #f1f5f9;
-            transform: translateY(-1px);
-        }
-        .protect-stat {
-            display: inline-block;
-            position: relative;
-            width: 44px;
-            height: 44px;
-            margin: 0 8px 0 0;
-            border-radius: 14px;
-            background-image: url(res:btn-footers.png);
-            background-repeat: no-repeat;
-            vertical-align: middle;
-        }
+        .icon-btn:hover, .btn-footers:hover { background-color: #eef2f7; }
         .protect-stat.no-danger { background-position: -560px 0; }
         .protect-stat.not-protected { background-position: -480px 0; }
         .protect-stat.protected { background-position: -520px 0; }
+        .btn-top { background-position: -240px 0; }
+        .btn-top.topmost { background-position: -280px 0; }
+        .btn-debug { background-position: -160px 0; }
 
-        .btn-footers.btn-restart { background-position: 0 0; }
-        .btn-footers.btn-kill { background-position: -80px 0; }
-        .btn-footers.btn-top { background-position: -240px 0; }
-        .btn-footers.btn-top.topmost { background-position: -280px 0; }
-        .btn-footers.btn-debug { background-position: -160px 0; }
-        .btn-footers.btn-about { background-position: -320px 0; }
-        .btn-footers.btn-power { background-position: -400px 0; }
+        .text-btn {
+            display: inline-block; vertical-align: middle; height: 40px; line-height: 40px;
+            padding: 0 12px; margin-right: 4px; border-radius: 11px;
+            background: #eef2f7; color: #334155; font-size: 11px;
+            text-decoration: none; text-align: center;
+        }
+        .text-btn:hover { background: #e2e8f0; }
+        .version { margin-top: 3px; color: #94a3b8; font-size: 9px; line-height: 13px; }
+        .version b { color: #64748b; font-size: 10px; font-weight: 600; margin-right: 4px; }
 
-        .version {
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 10px;
-            padding-top: 0;
-            color: #94a3b8;
-            font-size: 10px;
-            line-height: 15px;
-            text-align: left;
+        /* Right content header */
+        .content-header { position: relative; height: 62px; border-bottom: 1px solid #eef2f7; }
+        .content-header h2 { margin: 0; font-size: 20px; line-height: 26px; font-weight: 700; color: #0f172a; }
+        .content-header p { margin: 1px 0 0 0; font-size: 11px; line-height: 16px; color: #94a3b8; }
+        .status-pill {
+            position: absolute; right: 0; top: 4px; max-width: 260px;
+            padding: 5px 10px; border-radius: 16px; background: #ecfdf5; color: #047857;
+            font-size: 10px; line-height: 15px; white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .version b {
-            display: block;
-            color: #64748b;
-            font-size: 11px;
-            font-weight: 600;
-        }
+        .state-warn .status-pill { background: #fff7ed; color: #b45309; }
+        .state-notwork .status-pill { background: #f1f5f9; color: #475569; }
 
-        /* Tooltips */
-        .window-tooltips-top, .window-tooltips-bottom {
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 0;
-            z-index: 60;
+        .content-body {
+            position: absolute; left: 24px; right: 24px; top: 76px; bottom: 14px;
+            overflow-y: scroll; overflow-x: hidden;
         }
-        .window-tooltips-top { top: 0; }
-        .window-tooltips-bottom { bottom: 90px; }
-        .tooltip {
-            display: none;
-            position: absolute;
-            padding: 8px 10px;
-            border-radius: 9px;
-            background: #0f172a;
-            color: #f8fafc;
-            font-size: 11px;
-            line-height: 16px;
-            box-shadow: 0 8px 20px rgba(15, 23, 42, .25);
-            white-space: normal;
-        }
-        .tooltip.shown { display: block; }
-        .tooltip small { color: #cbd5e1; font-size: 10px; }
-        .tooltip h4 { margin: 0 0 2px 0; font-size: 11px; color: #fff; }
-        .tooltip-jiyu-pid { left: 28px; bottom: 8px; width: 280px; }
-        .tooltip-jiyu-restart { left: 28px; bottom: 8px; width: 280px; }
-        .tooltip-version { left: 26px; bottom: 8px; width: 170px; }
-        .tooltip-topmost { left: 72px; bottom: 8px; width: 86px; }
-        .tooltip-sets { left: 160px; bottom: 8px; width: 76px; }
-        .tooltip-power { left: 250px; bottom: 8px; width: 70px; }
-        .tooltip-protect-stat { left: 22px; bottom: 8px; width: 286px; }
-        #tooltip_fast {
-            left: 18px;
-            right: 18px;
-            top: 92px;
-            width: auto;
-            padding: 14px 16px;
-            font-size: 12px;
-            line-height: 18px;
-        }
-        #tooltip_fast h4, #tooltip_fast h5 { margin: 0; font-size: 13px; color: #fff; }
-
-        /* Expand sheet */
-        .window-extend-area {
-            display: none;
-            position: absolute;
-            left: 12px;
-            right: 12px;
-            top: 62px;
-            bottom: 96px;
-            padding: 14px 16px 16px 16px;
-            background: #ffffff;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 24px 60px rgba(15, 23, 42, .22);
-            z-index: 30;
-            opacity: 0;
-            transform: translateY(8px) scale(.985);
-            transition: opacity 140ms linear, transform 140ms linear;
-        }
-        .window-extend-area.shown {
-            display: block;
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .window-extend-area.hidden {
-            display: block;
-            opacity: 0;
-            transform: translateY(8px) scale(.985);
-        }
-        .window-extend-area.upper { z-index: 40; }
-
-        .window-tab-con {
-            position: absolute;
-            left: 16px;
-            right: 56px;
-            top: 12px;
-            height: 32px;
-        }
-        .window-tab {
-            display: inline-block;
-            padding: 3px;
-            border-radius: 10px;
-            background: #f1f5f9;
-        }
-        .btn-tab {
-            display: inline-block;
-            padding: 5px 14px;
-            border-radius: 8px;
-            color: #64748b;
-            font-size: 12px;
-            text-decoration: none;
-        }
-        .btn-tab.active {
-            background: #ffffff;
-            color: #0f172a;
-            font-weight: 600;
-            box-shadow: 0 1px 4px rgba(15, 23, 42, .10);
-        }
-        .btn-close-extend-area {
-            position: absolute;
-            right: 14px;
-            top: 14px;
-            width: 28px;
-            height: 28px;
-            line-height: 26px;
-            text-align: center;
-            border-radius: 8px;
-            background: #f1f5f9;
-            color: #64748b;
-            text-decoration: none;
-            font-size: 17px;
-            font-family: "Segoe UI", sans-serif;
-        }
-        .btn-close-extend-area:hover { background: #e2e8f0; color: #334155; }
-
-        .window-page {
-            display: none;
-            position: absolute;
-            left: 16px;
-            right: 16px;
-            top: 66px;
-            bottom: 14px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-        }
+        .window-page { display: none; }
         .window-page.active { display: block; }
-        .window-page h4 {
-            margin: 0 0 10px 0;
-            font-size: 15px;
-            color: #0f172a;
-        }
+        .window-page h4 { margin: 0 0 8px 0; font-size: 15px; color: #0f172a; }
         .window-page h5 {
-            margin: 14px 0 6px 0;
-            font-size: 11px;
-            letter-spacing: .4px;
-            color: #94a3b8;
-            font-weight: 600;
+            margin: 10px 0 5px 0; font-size: 10px; letter-spacing: .4px;
+            color: #94a3b8; font-weight: 600;
         }
 
         /* Settings */
-        .check-row {
-            display: block;
-            position: relative;
-            padding: 5px 8px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #334155;
-        }
-        .check-row:hover { background: #f8fafc; }
-        .check-row input {
-            width: 15px;
-            height: 15px;
-            margin: 0 8px 0 0;
-            vertical-align: -2px;
-        }
-        .check-row label { cursor: pointer; }
-        .tool-links {
-            margin: 2px 0 6px 0;
-            line-height: 26px;
-        }
+        .tool-links { margin: 0 0 6px 0; line-height: 26px; }
         .tool-link {
-            display: inline-block;
-            margin: 0 6px 4px 0;
-            padding: 3px 9px;
-            border-radius: 8px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #0369a1;
-            font-size: 11px;
-            line-height: 17px;
-            text-decoration: none;
+            display: inline-block; margin: 0 6px 4px 0; padding: 3px 9px;
+            border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0;
+            color: #0369a1; font-size: 11px; line-height: 17px; text-decoration: none;
         }
         .tool-link:hover { background: #eef6fc; border-color: #bae0fa; }
-        .settings-note {
-            margin: 4px 0 8px 0;
-            color: #94a3b8;
-            font-size: 10px;
-            line-height: 15px;
+
+        .check-row {
+            display: block; position: relative; padding: 5px 8px;
+            border-radius: 8px; font-size: 12px; color: #334155;
         }
-        .link-row {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #eef2f7;
-            font-size: 11px;
-            line-height: 22px;
-        }
-        .link-row a, .cfg-link {
-            color: #0369a1;
-            text-decoration: none;
-            margin-right: 12px;
-        }
-        .link-row a:hover, .cfg-link:hover { text-decoration: underline; }
-        .link-row .danger { color: #b45309; }
+        .check-row:hover { background: #f8fafc; }
+        .check-row input { width: 15px; height: 15px; margin: 0 8px 0 0; vertical-align: -2px; }
+        .check-row label { cursor: pointer; }
+        .settings-note { margin: 4px 0 6px 0; color: #94a3b8; font-size: 10px; line-height: 15px; }
 
         .btn-common {
-            display: inline-block;
-            padding: 7px 14px;
-            border-radius: 9px;
-            background: #eef2f7;
-            color: #334155;
-            font-size: 12px;
-            text-decoration: none;
-            text-align: center;
-            transition: background-color 120ms linear;
+            display: inline-block; padding: 7px 14px; border-radius: 9px;
+            background: #eef2f7; color: #334155; font-size: 12px;
+            text-decoration: none; text-align: center;
         }
         .btn-common:hover { background: #e2e8f0; }
         .btn-common.btn-primary { background: #2ea4f0; color: #ffffff; }
@@ -457,21 +201,13 @@
         .btn-common.btn-secondary { background: #fee2e2; color: #b91c1c; }
         .btn-common.btn-secondary:hover { background: #fecaca; }
         .text-center { text-align: center; }
-        .text-right { text-align: right; }
         .ml-2 { margin-left: 8px; }
-        .m-0 { margin: 0; }
 
         /* Debug */
         #status_area {
-            height: 210px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            background: #0f172a;
-            color: #cbd5e1;
-            font-family: Consolas, "Courier New", monospace;
-            font-size: 10px;
-            line-height: 15px;
-            overflow-y: scroll;
+            height: 238px; padding: 8px 10px; border-radius: 10px; background: #0f172a;
+            color: #cbd5e1; font-family: Consolas, "Courier New", monospace;
+            font-size: 10px; line-height: 15px; overflow-y: scroll;
         }
         #status_area div { margin-bottom: 2px; }
         .text-black { color: #e2e8f0; }
@@ -479,277 +215,179 @@
         .text-warning { color: #fcd34d; }
         .text-danger { color: #fca5a5; }
         #input_cmd {
-            width: 250px;
-            height: 30px;
-            margin-top: 10px;
-            padding: 0 10px;
-            border: 1px solid #dbe3ee;
-            border-radius: 8px;
-            background: #ffffff;
-            color: #0f172a;
-            font-size: 12px;
-            font-family: Consolas, monospace;
-            outline: none;
+            width: 300px; height: 30px; margin-top: 10px; padding: 0 10px;
+            border: 1px solid #dbe3ee; border-radius: 8px; background: #ffffff;
+            color: #0f172a; font-size: 12px; font-family: Consolas, monospace; outline: none;
         }
         #input_cmd:focus { border-color: #2ea4f0; }
         #link_more_cmd { margin-left: 4px; }
 
         /* About */
         .about-head { text-align: center; padding-top: 2px; }
-        .about-head img { width: 68px; height: 68px; border-radius: 18px; }
-        .about-title {
-            margin-top: 8px;
-            font-size: 17px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-        .about-sub {
-            margin-top: 2px;
-            font-size: 11px;
-            color: #64748b;
-        }
+        .about-head img { width: 62px; height: 62px; border-radius: 16px; }
+        .about-title { margin-top: 6px; font-size: 17px; font-weight: 700; color: #0f172a; }
+        .about-sub { margin-top: 2px; font-size: 11px; color: #64748b; }
         .about-credits {
-            margin-top: 14px;
-            padding: 12px;
-            border-radius: 12px;
-            background: #f8fafc;
-            border: 1px solid #eef2f7;
-            font-size: 11px;
-            line-height: 18px;
-            color: #475569;
+            margin-top: 12px; padding: 10px 12px; border-radius: 12px;
+            background: #f8fafc; border: 1px solid #eef2f7;
+            font-size: 11px; line-height: 18px; color: #475569;
         }
-        .about-links {
-            margin-top: 12px;
-            text-align: center;
-            font-size: 11px;
-            line-height: 24px;
-        }
-        .about-links a {
-            color: #0369a1;
-            text-decoration: none;
-            margin: 0 6px;
-        }
+        .about-links { margin-top: 10px; text-align: center; font-size: 11px; line-height: 24px; }
+        .about-links a { color: #0369a1; text-decoration: none; margin: 0 6px; }
         .about-links a:hover { text-decoration: underline; }
         .about-note {
-            margin-top: 10px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            background: #fff7ed;
-            color: #9a3412;
-            font-size: 10px;
-            line-height: 15px;
+            margin-top: 9px; padding: 8px 10px; border-radius: 8px;
+            background: #fff7ed; color: #9a3412; font-size: 10px; line-height: 15px;
         }
 
-        /* Modals and masks */
+        /* Tooltips */
+        .tooltip {
+            display: none; position: absolute; padding: 7px 9px; border-radius: 8px;
+            background: #0f172a; color: #f8fafc; font-size: 10px; line-height: 15px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, .25); z-index: 60; white-space: normal;
+        }
+        .tooltip.shown { display: block; }
+        .tooltip small { color: #cbd5e1; font-size: 9px; }
+        .tooltip h4 { margin: 0 0 2px 0; font-size: 10px; color: #fff; }
+        .tooltip-jiyu-pid { left: 16px; bottom: 66px; width: 300px; }
+        .tooltip-jiyu-restart { left: 16px; bottom: 66px; width: 300px; }
+        .tooltip-version { left: 16px; bottom: 66px; width: 200px; }
+        .tooltip-topmost { left: 60px; bottom: 66px; width: 100px; }
+        .tooltip-sets { left: 16px; bottom: 66px; width: 100px; }
+        .tooltip-power { left: 110px; bottom: 66px; width: 80px; }
+        .tooltip-protect-stat { left: 16px; bottom: 66px; width: 300px; }
+        #tooltip_fast {
+            left: 360px; right: 24px; top: 72px; width: auto;
+            padding: 14px 16px; font-size: 12px; line-height: 18px;
+        }
+        #tooltip_fast h4, #tooltip_fast h5 { margin: 0; font-size: 13px; color: #fff; }
+
+        /* Modals */
+        .window-extend-area {
+            display: none; position: absolute; padding: 18px; background: #ffffff;
+            border-radius: 16px; border: 1px solid #e2e8f0;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, .30); z-index: 40;
+        }
+        .window-extend-area.shown { display: block; }
+        .window-extend-area.upper { z-index: 40; }
         .window-extend-area-mask {
-            display: none;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, .38);
-            z-index: 35;
-            border-radius: 18px;
+            display: none; position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+            background: rgba(15, 23, 42, .38); z-index: 35; border-radius: 18px;
         }
         .window-extend-area.shown.with-mask + .window-extend-area-mask { display: block; }
 
-        #common_message {
-            top: 110px;
-            bottom: 150px;
-            left: 22px;
-            right: 22px;
-            padding: 18px;
+        #common_message { left: 230px; right: 230px; top: 120px; bottom: 120px; }
+        #cmds_message { left: 190px; right: 190px; top: 70px; bottom: 70px; }
+        #power_message { left: 300px; right: 300px; top: 140px; bottom: 130px; }
+        #update_message { left: 230px; right: 230px; top: 100px; bottom: 100px; }
+        #isnew_message { left: 250px; right: 250px; top: 120px; bottom: 110px; }
+        #exit_message { left: 220px; right: 220px; top: 120px; bottom: 110px; }
+        #hello_message { left: 280px; right: 280px; top: 160px; bottom: 150px; }
+
+        .btn-close-extend-area {
+            position: absolute; right: 14px; top: 14px; width: 28px; height: 28px;
+            line-height: 26px; text-align: center; border-radius: 8px;
+            background: #f1f5f9; color: #64748b; text-decoration: none;
+            font-size: 17px; font-family: "Segoe UI", sans-serif;
         }
+        .btn-close-extend-area:hover { background: #e2e8f0; color: #334155; }
+        #common_message .title-close, #cmds_message .title-close { top: 12px; right: 12px; }
+
         #common_message h3, #cmds_message h3, #power_message h3, #exit_message h3 {
-            margin: 0 0 8px 0;
-            font-size: 15px;
-            color: #0f172a;
+            margin: 0 0 8px 0; font-size: 15px; color: #0f172a;
         }
         #common_message p, #exit_message p {
-            margin: 0;
-            font-size: 11px;
-            line-height: 17px;
-            color: #475569;
-        }
-        #common_message .title-close {
-            top: 12px;
-            right: 12px;
-            color: #64748b;
-        }
-        #cmds_message {
-            top: 64px;
-            bottom: 74px;
-            left: 14px;
-            right: 14px;
-            padding: 16px;
+            margin: 0; font-size: 11px; line-height: 17px; color: #475569;
         }
         #commands_help_area {
-            height: 250px;
-            overflow-y: scroll;
-            font-size: 10px;
-            line-height: 18px;
-            color: #334155;
+            height: 250px; overflow-y: scroll; font-size: 10px; line-height: 18px; color: #334155;
         }
         #commands_help_area span, #commands_help_area a {
-            display: block;
-            padding: 1px 0;
-            color: #334155;
-            text-decoration: none;
+            display: block; padding: 1px 0; color: #334155; text-decoration: none;
         }
         #commands_help_area a:hover { color: #0369a1; }
         #commands_help_area .text-danger { color: #dc2626; }
-        #power_message {
-            top: 120px;
-            bottom: 150px;
-            left: 26px;
-            right: 26px;
-            padding: 18px;
-        }
+
         .op-item {
-            display: block;
-            position: relative;
-            padding: 10px 12px;
-            margin-top: 6px;
-            border-radius: 10px;
-            background: #f8fafc;
-            border: 1px solid #eef2f7;
-            color: #334155;
-            font-size: 12px;
-            text-decoration: none;
+            display: block; padding: 9px 12px; margin-top: 6px; border-radius: 10px;
+            background: #f8fafc; border: 1px solid #eef2f7; color: #334155;
+            font-size: 12px; text-decoration: none;
         }
         .op-item:hover { background: #f1f5f9; border-color: #e2e8f0; }
         .op-item span { display: inline-block; margin-left: 8px; vertical-align: 2px; }
-        .op-item .op-icon {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            line-height: 22px;
-            text-align: center;
-            border-radius: 7px;
-            background: #e0f2fe;
-            color: #0369a1;
-            font-size: 13px;
-        }
-        #update_message {
-            top: 86px;
-            bottom: 100px;
-            left: 18px;
-            right: 18px;
-            padding: 16px;
-        }
-        #isnew_message {
-            top: 106px;
-            bottom: 118px;
-            left: 20px;
-            right: 20px;
-            padding: 16px;
-        }
-        #exit_message {
-            top: 100px;
-            bottom: 112px;
-            left: 18px;
-            right: 18px;
-            padding: 16px;
-        }
-        #hello_message {
-            top: 150px;
-            bottom: 160px;
-            left: 30px;
-            right: 30px;
-            padding: 16px;
+        .op-icon {
+            display: inline-block; width: 22px; height: 22px; line-height: 22px;
+            text-align: center; border-radius: 7px; background: #e0f2fe;
+            color: #0369a1; font-size: 13px;
         }
         .new-ver { margin-bottom: 8px; }
         .new-ver .text {
-            display: inline-block;
-            padding: 2px 7px;
-            border-radius: 6px;
-            background: #dcfce7;
-            color: #15803d;
-            font-size: 10px;
+            display: inline-block; padding: 2px 7px; border-radius: 6px;
+            background: #dcfce7; color: #15803d; font-size: 10px;
         }
         .new-ver .ver {
-            display: block;
-            margin-top: 6px;
-            color: #0f172a;
-            font-size: 13px;
-            font-weight: 600;
+            display: block; margin-top: 6px; color: #0f172a; font-size: 13px; font-weight: 600;
         }
         #update_message_text, #isnew_message_text {
-            height: 92px;
-            overflow-y: scroll;
-            font-size: 11px;
-            line-height: 17px;
-            color: #475569;
+            height: 100px; overflow-y: scroll; font-size: 11px; line-height: 17px; color: #475569;
         }
-        .modal-actions {
-            position: absolute;
-            left: 16px;
-            right: 16px;
-            bottom: 14px;
-            text-align: right;
-        }
+        .modal-actions { position: absolute; left: 16px; right: 16px; bottom: 14px; text-align: right; }
         .modal-actions .btn-common { margin-left: 6px; }
+        .title-close.black { color: #64748b; }
     </style>
 </head>
 <body class="window-shadow">
-    <div class="window-box" id="wnd">
-        <div class="window-area">
-            <div class="window-title-area" id="title-area">
-                <img src="res:icon-main-small.png" id="title-icon" />
-                <h5 id="title">JiYu Trainer <span class="title-badge">Jare-Li</span></h5>
-                <a class="title-min" id="btn_min" href="#" title="最小化">−</a>
-                <a class="title-close" id="btn_close" href="#" title="关闭">×</a>
-            </div>
-            <div class="main-state">
-                <div class="inner">
-                    <img class="state-not-found" id="status_icon" />
-                </div>
-                <div class="status-text" id="status_text_main">正在初始化</div>
-                <div class="status-text2" id="status_text_more">请稍候...</div>
-            </div>
+<div class="window-box" id="wnd">
+    <aside class="sidebar">
+        <div class="titlebar" id="title-area">
+            <img src="res:icon-main-small.png" id="title-icon" />
+            <h1 id="title">JiYu Trainer <span class="badge">Jare-Li</span></h1>
+            <a class="title-min" id="btn_min" href="#" title="最小化">−</a>
+            <a class="title-close" id="btn_close" href="#" title="关闭">×</a>
         </div>
 
-        <div class="window-tooltips-top">
-            <div class="tooltip" id="tooltip_fast"></div>
-        </div>
-        <div class="window-tooltips-bottom">
-            <div class="tooltip tooltip-version">当前版本 <b>v1.7.6</b><br /><small>Jare-Li Refactor</small></div>
-            <div class="tooltip tooltip-jiyu-pid">StudentMain.exe PID：<span id="status_jiyu_pid">未知</span><br /><small>点击结束极域电子教室</small></div>
-            <div class="tooltip tooltip-jiyu-restart"><h4>极域位置</h4><span id="status_jiyu_path">未找到极域电子教室</span></div>
-            <div class="tooltip tooltip-topmost" id="tooltip_top">窗口置顶</div>
-            <div class="tooltip tooltip-sets">设置与日志</div>
-            <div class="tooltip tooltip-power">电源</div>
-            <div class="tooltip tooltip-protect-stat" id="status_protect">您未受到极域电子教室的控制</div>
-        </div>
-
-        <div class="window-footer-area">
-            <a class="btn-footers protect-stat no-danger" id="btn_protect_stat"></a>
-            <div class="btn-footers-area">
-                <a class="btn-footers btn-top" id="btn_top" href="#"></a>
-                <a class="btn-footers btn-kill" id="btn_kill" href="#" style="display:none;"></a>
-                <a class="btn-footers btn-restart" id="btn_restart" href="#"></a>
-                <a class="btn-footers btn-debug" id="btn_debug" href="#"></a>
-                <a class="btn-footers btn-power" id="btn_power" href="#"></a>
-                <a class="btn-footers btn-about" id="btn_about" href="#"></a>
-                <div class="version"><b>v1.7.6</b><span>Jare-Li</span></div>
+        <div class="main-state">
+            <div class="inner"><img class="state-not-found" id="status_icon" /></div>
+            <div class="status-text" id="status_text_main">正在初始化</div>
+            <div class="status-text2" id="status_text_more">请稍候...</div>
+            <div class="jiyu-meta">
+                <span class="pid">StudentMain.exe PID：<span id="status_jiyu_pid">未知</span></span>
+                <span id="status_jiyu_path">未找到极域电子教室</span>
             </div>
         </div>
 
-        <div class="window-extend-area" id="extend_area">
-            <div class="window-tab-con">
-                <div class="window-tab">
-                    <a class="btn-tab active" href="#" id="btn_tab_setting">设置</a>
-                    <a class="btn-tab" href="#" id="btn_tab_debug">调试</a>
-                    <a class="btn-tab" href="#" id="btn_tab_about">关于</a>
-                </div>
-            </div>
-            <a href="#" id="link_close_extend_area" class="btn-close-extend-area">×</a>
+        <nav class="nav">
+            <a class="nav-item btn-tab active" id="btn_tab_setting" href="#">设置</a>
+            <a class="nav-item btn-tab" id="btn_tab_debug" href="#">调试</a>
+            <a class="nav-item btn-tab" id="btn_tab_about" href="#">关于</a>
+            <a class="nav-item" id="link_attact" href="#">UDP 重放</a>
+            <a class="nav-item" id="btn_power" href="#">电源</a>
+            <a class="nav-item" id="btn_about" href="#">帮助</a>
+        </nav>
 
+        <div class="sidebar-footer">
+            <div class="quick-row">
+                <a class="icon-btn protect-stat no-danger" id="btn_protect_stat"></a>
+                <a class="icon-btn btn-top" id="btn_top" href="#"></a>
+                <a class="text-btn" id="btn_kill" href="#" style="display:none;">结束极域</a>
+                <a class="text-btn" id="btn_restart" href="#">启动极域</a>
+                <a class="icon-btn btn-debug" id="btn_debug" href="#" style="display:none;"></a>
+            </div>
+            <div class="version"><b>v1.7.6</b><span>Jare-Li Refactor</span></div>
+        </div>
+    </aside>
+
+    <main class="content">
+        <div class="content-header">
+            <h2 id="content-title">设置</h2>
+            <p id="content-sub">保护选项与工具</p>
+            <div class="status-pill" id="status_protect">您未受到极域电子教室的控制</div>
+        </div>
+
+        <a href="#" id="link_close_extend_area" style="display:none;">×</a>
+        <div class="content-body" id="extend_area">
             <div class="window-page active" id="page_setting">
-                <h4>保护设置</h4>
                 <div class="tool-links">
-                    <a href="#" class="tool-link" id="link_attact">UDP 重放</a>
                     <a href="#" class="tool-link" id="link_unload_netfilter">解除网络控制</a>
                     <a href="#" class="tool-link" id="link_read_jiyu_password2">读取极域密码</a>
                     <a href="#" class="tool-link" id="link_locate_jiyu_position">指定极域位置</a>
@@ -789,7 +427,7 @@
                     <label for="check_auto_update">自动检查更新</label>
                 </div>
                 <p class="settings-note">默认配置已偏向保护本机；修改后请点击“保存设置”。</p>
-                <div class="text-center" style="margin-top:8px;">
+                <div class="text-center" style="margin-top:6px;">
                     <a href="#" id="link_save_setting" class="btn-common btn-primary">保存设置</a>
                     <a href="#" id="link_setto_default" class="btn-common ml-2">恢复默认</a>
                 </div>
@@ -828,321 +466,260 @@
                 </div>
             </div>
         </div>
+    </main>
 
-        <div class="window-extend-area with-mask upper" id="common_message">
-            <a href="#" class="title-close" id="common_message_close">×</a>
-            <h3 id="common_message_title">提示</h3>
-            <p id="common_message_text"></p>
-            <div class="modal-actions">
-                <a href="#" class="btn-common btn-primary" id="common_message_close2">我知道了</a>
-            </div>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-
-        <div class="window-extend-area with-mask upper" id="cmds_message">
-            <a href="#" class="title-close" id="cmds_message_close">×</a>
-            <h3>调试命令</h3>
-            <p style="margin:0 0 8px 0;font-size:10px;color:#b45309;">以下命令仅供调试，部分操作存在风险</p>
-            <div id="commands_help_area">
-                <span>killst 结束极域电子教室</span>
-                <span>rerunst 重新运行极域电子教室</span>
-                <span>kill [pid] 结束指定进程</span>
-                <span>findps [name] 查找进程 PID</span>
-                <span>ss 通知极域端强制爆破</span>
-                <span>sss 立即关机</span>
-                <span>ssr 立即重启</span>
-                <span>sst [sec] 定时关机</span>
-                <span>ssss 内核关机</span>
-                <span>sssr 内核重启</span>
-                <span>ckend 分离本程序与极域</span>
-                <span>whereisi 显示程序目录</span>
-                <span>version 显示版本</span>
-                <span>testupdate 测试升级模块</span>
-                <span>crash 测试崩溃</span>
-                <span>exit 强制退出</span>
-                <a href="#" id="link_hide">hide 隐藏主界面</a>
-                <a href="#" id="link_read_jiyu_password">jypasswd 读取极域密码</a>
-                <span>uj 从极域卸载已注入模块</span>
-                <span>inspector 启动 UI 调试器</span>
-                <span>fuljydrv 强制卸载极域保护驱动 <span class="text-danger">(有蓝屏风险)</span></span>
-                <span>unloaddrv 卸载本软件驱动</span>
-            </div>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-
-        <div class="window-extend-area with-mask upper" id="hello_message">
-            <a href="#" id="link_close_hello_message" class="btn-close-extend-area">×</a>
-            <h3>欢迎使用</h3>
-            <p style="font-size:11px;line-height:17px;color:#475569;">主界面会自动接管极域的屏幕广播。关闭窗口会隐藏到托盘，按热键可快速呼出。</p>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-
-        <div class="window-extend-area with-mask upper" id="power_message">
-            <a href="#" id="link_close_power_message" class="btn-close-extend-area">×</a>
-            <h3>电源与退出</h3>
-            <a class="op-item" id="link_shutdown" href="#"><span class="op-icon">⏻</span><span>关闭计算机</span></a>
-            <a class="op-item" id="link_reboot" href="#"><span class="op-icon">↻</span><span>重启计算机</span></a>
-            <a class="op-item" id="link_exit" href="#"><span class="op-icon">×</span><span>退出本软件</span></a>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-
-        <div class="window-extend-area with-mask upper" id="update_message">
-            <div class="new-ver">
-                <span class="text">发现新版本</span>
-                <span class="ver"><span id="update_message_newver"></span> 更新内容</span>
-            </div>
-            <p id="update_message_text"></p>
-            <div class="modal-actions">
-                <a href="#" class="btn-common btn-primary" id="update_message_update">立即更新</a>
-                <a href="#" class="btn-common ml-2" id="update_message_close">下次再说</a>
-            </div>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-
-        <div class="window-extend-area with-mask upper" id="isnew_message">
-            <div class="new-ver">
-                <span class="text">检查更新</span>
-                <span class="ver" id="isnew_message_title">已是最新版本</span>
-            </div>
-            <p id="isnew_message_text"></p>
-            <div class="modal-actions">
-                <a href="#" class="btn-common btn-primary" id="isnew_message_close">关闭</a>
-            </div>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
-
-        <div class="window-extend-area with-mask upper" id="exit_message">
-            <a href="#" class="btn-close-extend-area" id="exit_message_close">×</a>
-            <h3>极域正在运行，仍要退出？</h3>
-            <p>当前正在接管极域。退出会降低保护；建议先结束极域，或分离后再退出。</p>
-            <div class="modal-actions">
-                <a href="#" class="btn-common btn-secondary" id="exit_message_kill_and_exit">结束极域并退出</a>
-                <a href="#" class="btn-common" id="exit_message_end_ctl_and_exit">分离后退出</a>
-                <a href="#" class="btn-common btn-primary" id="exit_message_close2">取消</a>
-            </div>
-        </div>
-        <div class="window-extend-area-mask upper"></div>
+    <div class="window-tooltips-bottom">
+        <div class="tooltip tooltip-jiyu-pid">StudentMain.exe PID：<span>见左侧状态</span><br /><small>点击结束极域电子教室</small></div>
+        <div class="tooltip tooltip-jiyu-restart"><h4>极域位置</h4><span>见左侧状态卡片</span></div>
+        <div class="tooltip tooltip-version">当前版本 <b>v1.7.6</b><br /><small>Jare-Li Refactor</small></div>
+        <div class="tooltip tooltip-topmost" id="tooltip_top">窗口置顶</div>
+        <div class="tooltip tooltip-sets">设置与日志</div>
+        <div class="tooltip tooltip-power">电源</div>
+        <div class="tooltip tooltip-protect-stat">您未受到极域电子教室的控制</div>
     </div>
-    <script type="text/tiscript">
+    <div class="tooltip" id="tooltip_fast"></div>
 
-        const body = $(body);
-        const extend_area = $(#extend_area);
-        const common_message = $(#common_message);
+    <div class="window-extend-area with-mask upper" id="common_message">
+        <a href="#" class="title-close black" id="common_message_close">×</a>
+        <h3 id="common_message_title">提示</h3>
+        <p id="common_message_text"></p>
+        <div class="modal-actions">
+            <a href="#" class="btn-common btn-primary" id="common_message_close2">我知道了</a>
+        </div>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
 
-        //Button events
-        $(#btn_close).onClick = function() {
-            closeWindow();
-        }
-        $(#btn_min).onClick = function()
-        {
-            body.onAnimationEnd = function(){
-                 view.state = View.WINDOW_MINIMIZED;
-                 if(body.attributes.hasClass("minize"))
-                     body.attributes.removeClass("minize");
-            }
-            body.attributes.addClass("minize");
-        }
-        $(#btn_debug).onClick = function()
-        {
-            if(extend_area.attributes.hasClass("shown")) {
-                extend_area.attributes.removeClass("shown");
-                extend_area.attributes.addClass("hidden");
-                this.timer(200ms, function() {
-                     extend_area.attributes.removeClass("hidden");
-                });
-            }
-            else extend_area.attributes.addClass("shown");
-        }
+    <div class="window-extend-area with-mask upper" id="cmds_message">
+        <a href="#" class="title-close black" id="cmds_message_close">×</a>
+        <h3>调试命令</h3>
+        <p style="margin:0 0 8px 0;font-size:10px;color:#b45309;">以下命令仅供调试，部分操作存在风险</p>
+        <div id="commands_help_area">
+            <span>killst 结束极域电子教室</span>
+            <span>rerunst 重新运行极域电子教室</span>
+            <span>kill [pid] 结束指定进程</span>
+            <span>findps [name] 查找进程 PID</span>
+            <span>ss 通知极域端强制爆破</span>
+            <span>sss 立即关机</span>
+            <span>ssr 立即重启</span>
+            <span>sst [sec] 定时关机</span>
+            <span>ssss 内核关机</span>
+            <span>sssr 内核重启</span>
+            <span>ckend 分离本程序与极域</span>
+            <span>whereisi 显示程序目录</span>
+            <span>version 显示版本</span>
+            <span>testupdate 测试升级模块</span>
+            <span>crash 测试崩溃</span>
+            <span>exit 强制退出</span>
+            <a href="#" id="link_hide">hide 隐藏主界面</a>
+            <a href="#" id="link_read_jiyu_password">jypasswd 读取极域密码</a>
+            <span>uj 从极域卸载已注入模块</span>
+            <span>inspector 启动 UI 调试器</span>
+            <span>fuljydrv 强制卸载极域保护驱动 <span class="text-danger">(有蓝屏风险)</span></span>
+            <span>unloaddrv 卸载本软件驱动</span>
+        </div>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
 
-        $(#link_close_extend_area).onClick = function(){
-            if(extend_area.attributes.hasClass("shown")) {
-                extend_area.attributes.removeClass("shown");
-                extend_area.attributes.addClass("hidden");
-                this.timer(200ms, function() {
-                     extend_area.attributes.removeClass("hidden");
-                });
-            }
-        }
-        $(#link_github).onClick = function () { view.toGithub(); }
-        $(#link_more_cmd).onClick = function (){ $(#cmds_message).attributes.addClass("shown");  }
-        $(#link_close_power_message).onClick = function (){ common_close_extend_area($(#power_message));  }
-        $(#link_close_hello_message).onClick = function (){ common_close_extend_area($(#hello_message));  }
-        function close_cmds_tip(){common_close_extend_area($(#cmds_message));}
+    <div class="window-extend-area with-mask upper" id="hello_message">
+        <a href="#" id="link_close_hello_message" class="btn-close-extend-area">×</a>
+        <h3>欢迎使用</h3>
+        <p style="font-size:11px;line-height:17px;color:#475569;">主界面会自动接管极域的屏幕广播。关闭窗口会隐藏到托盘，按热键可快速呼出。</p>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
 
-        function common_close_extend_area(area){
-            if(area.attributes.hasClass("shown")) {
-                area.attributes.removeClass("shown");
-                area.attributes.addClass("hidden");
-                body.timer(200ms, function() {
-                     area.attributes.removeClass("hidden");
-                });
-            }
-        }
-        $(#common_message_close).onClick = function (){ common_close_extend_area(common_message); }
-        $(#common_message_close2).onClick = function (){ common_close_extend_area(common_message); }
-        $(#update_message_close).onClick =  function (){ common_close_extend_area($(#update_message)); }
-        $(#update_message_update).onClick =  function (){ common_close_extend_area($(#update_message)); }
-        $(#exit_message_close).onClick =  function (){ common_close_extend_area($(#exit_message)); }
-        $(#exit_message_close2).onClick =  function (){ common_close_extend_area($(#exit_message)); }
-        $(#cmds_message_close).onClick =  function (){ common_close_extend_area($(#cmds_message)); }
-        $(#isnew_message_close).onClick =  function (){ common_close_extend_area($(#isnew_message)); }
+    <div class="window-extend-area with-mask upper" id="power_message">
+        <a href="#" id="link_close_power_message" class="btn-close-extend-area">×</a>
+        <h3>电源与退出</h3>
+        <a class="op-item" id="link_shutdown" href="#"><span class="op-icon">⏻</span><span>关闭计算机</span></a>
+        <a class="op-item" id="link_reboot" href="#"><span class="op-icon">↻</span><span>重启计算机</span></a>
+        <a class="op-item" id="link_exit" href="#"><span class="op-icon">×</span><span>退出本软件</span></a>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
 
-        //Tooltips
-        $(#btn_kill).on("mouseenter", function () { $(.tooltip.tooltip-jiyu-pid).attributes.addClass("shown"); });
-        $(#btn_kill).on("mouseleave", function () { $(.tooltip.tooltip-jiyu-pid).attributes.removeClass("shown"); });
-        $(#btn_restart).on("mouseenter", function () { $(.tooltip.tooltip-jiyu-restart).attributes.addClass("shown"); });
-        $(#btn_restart).on("mouseleave", function () { $(.tooltip.tooltip-jiyu-restart).attributes.removeClass("shown"); });
-        $(#btn_about).on("mouseenter", function () { $(.tooltip.tooltip-vesion).attributes.addClass("shown"); });
-        $(#btn_about).on("mouseleave", function () { $(.tooltip.tooltip-vesion).attributes.removeClass("shown"); });
-        $(#btn_top).on("mouseenter", function () { $(.tooltip.tooltip-topmost).attributes.addClass("shown"); });
-        $(#btn_top).on("mouseleave", function () { $(.tooltip.tooltip-topmost).attributes.removeClass("shown"); });
-        $(#btn_debug).on("mouseenter", function () { $(.tooltip.tooltip-sets).attributes.addClass("shown"); });
-        $(#btn_debug).on("mouseleave", function () { $(.tooltip.tooltip-sets).attributes.removeClass("shown"); });
-        $(#btn_protect_stat).on("mouseenter", function () { $(.tooltip.tooltip-protect-stat).attributes.addClass("shown"); });
-        $(#btn_protect_stat).on("mouseleave", function () { $(.tooltip.tooltip-protect-stat).attributes.removeClass("shown"); });
-        $(#btn_power).on("mouseenter", function () { $(.tooltip.tooltip-power).attributes.addClass("shown"); });
-        $(#btn_power).on("mouseleave", function () { $(.tooltip.tooltip-power).attributes.removeClass("shown"); });
+    <div class="window-extend-area with-mask upper" id="update_message">
+        <div class="new-ver">
+            <span class="text">发现新版本</span>
+            <span class="ver"><span id="update_message_newver"></span> 更新内容</span>
+        </div>
+        <p id="update_message_text"></p>
+        <div class="modal-actions">
+            <a href="#" class="btn-common btn-primary" id="update_message_update">立即更新</a>
+            <a href="#" class="btn-common ml-2" id="update_message_close">下次再说</a>
+        </div>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
 
-        $(#tooltip_fast).onClick = function() { $(#tooltip_fast).attributes.removeClass("shown"); }
-        $(#btn_power).onClick = function() { $(#power_message).attributes.addClass("shown"); }
-        $(#link_exit).onClick = function() { $(#power_message).attributes.removeClass("shown"); }
-        $(#link_reboot).onClick =  $(#link_exit).onClick;
-        $(#link_shutdown).onClick =  $(#link_exit).onClick;
+    <div class="window-extend-area with-mask upper" id="isnew_message">
+        <div class="new-ver">
+            <span class="text">检查更新</span>
+            <span class="ver" id="isnew_message_title">已是最新版本</span>
+        </div>
+        <p id="isnew_message_text"></p>
+        <div class="modal-actions">
+            <a href="#" class="btn-common btn-primary" id="isnew_message_close">关闭</a>
+        </div>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
 
-        //Tabs
-        $(#btn_tab_setting).onClick = function() { selectTab(this, $(#page_setting)); }
-        $(#btn_tab_debug).onClick = function() { selectTab(this, $(#page_debug)); }
-        $(#btn_tab_about).onClick = function() { selectTab(this, $(#page_about)); }
+    <div class="window-extend-area with-mask upper" id="exit_message">
+        <a href="#" class="btn-close-extend-area" id="exit_message_close">×</a>
+        <h3>极域正在运行，仍要退出？</h3>
+        <p>当前正在接管极域。退出会降低保护；建议先结束极域，或分离后再退出。</p>
+        <div class="modal-actions">
+            <a href="#" class="btn-common btn-secondary" id="exit_message_kill_and_exit">结束极域并退出</a>
+            <a href="#" class="btn-common" id="exit_message_end_ctl_and_exit">分离后退出</a>
+            <a href="#" class="btn-common btn-primary" id="exit_message_close2">取消</a>
+        </div>
+    </div>
+    <div class="window-extend-area-mask upper"></div>
+</div>
 
-        function showExitMessage() {
-            $(#exit_message).attributes.addClass("shown");
-        }
-        function selectTab(btn, targetTab){
-            $(.btn-tab.active).attributes.removeClass("active");
-            $(.window-page.active).attributes.removeClass("active");
-            btn.attributes.addClass("active");
-            targetTab.attributes.addClass("active");
-        }
+<script type="text/tiscript">
+    const body = $(body);
+    const extend_area = $(#extend_area);
+    const pageTitles = {
+        setting: ["设置", "保护选项与工具"],
+        debug: ["调试", "运行日志与调试命令"],
+        about: ["关于", "版本、许可与上游信息"]
+    };
 
-        function runInspector()
-        {
-            if(!view.inspectorIsPresent()) // native function, defined in sciter.cpp
-                System.exec( System.home("inspector.exe") );
-            // give it a time to start ...
-             $(body).timer(500, function() {
-                if( var connectToInspector = view.connectToInspector )
-                    connectToInspector($(html));
-            });
+    function selectTab(btn, page, key) {
+        $(.btn-tab.active).attributes.removeClass("active");
+        $(.window-page.active).attributes.removeClass("active");
+        btn.attributes.addClass("active");
+        page.attributes.addClass("active");
+        if (key && pageTitles[key]) {
+            $(#content-title).text = pageTitles[key][0];
+            $(#content-sub).text = pageTitles[key][1];
         }
-        function showFastTip(){
-            const tooltip_fast = $(#tooltip_fast);
-            tooltip_fast.attributes.addClass("shown");
-            body.timer(4s, function() { tooltip_fast.attributes.removeClass("shown") });
-        }
-        function closeFastTip(){
-            $(#tooltip_fast).attributes.removeClass("shown")
-        }
-        function showWindow(){
-            body.onAnimationEnd = function(){ };
-            if(!body.attributes.hasClass("shown"))
-                body.attributes.addClass("shown");
-        }
+    }
 
-        const exit_message = $(#exit_message);
-        const hello_message = $(#hello_message);
-        const power_message = $(#power_message);
-        const update_message = $(#update_message);
+    $(#btn_tab_setting).onClick = function() { selectTab(this, $(#page_setting), "setting"); }
+    $(#btn_tab_debug).onClick = function() { selectTab(this, $(#page_debug), "debug"); }
+    $(#btn_tab_about).onClick = function() { selectTab(this, $(#page_about), "about"); }
 
-        function closeWindow(){
-            if(extend_area.attributes.hasClass("shown")) extend_area.attributes.removeClass("shown");
-            else  if(update_message.attributes.hasClass("shown")) return;
-            else  if(common_message.attributes.hasClass("shown")) common_message.attributes.removeClass("shown");
-            else  if(power_message.attributes.hasClass("shown")) power_message.attributes.removeClass("shown");
-            else  if(exit_message.attributes.hasClass("shown"))  exit_message.attributes.removeClass("shown");
-            else  if(hello_message.attributes.hasClass("shown")) hello_message.attributes.removeClass("shown");
-            else {
-                body.onAnimationEnd = function(){
-                    view.exitClick();
-                };
-                body.attributes.removeClass("shown");
-            }
+    $(#btn_close).onClick = function() { closeWindow(); }
+    $(#btn_min).onClick = function() {
+        body.onAnimationEnd = function() {
+            view.state = View.WINDOW_MINIMIZED;
+            if (body.attributes.hasClass("minize"))
+                body.attributes.removeClass("minize");
         }
-        function checkGfx()
-        {
-            if(!view.backend)
-                view.msgbox(#alert,"Failed to initialize layered window!");
-             return ["Unknown","GDI+","D2D/WARP","D2D/DX"][view.backend];
-        }
-        function self.ready()
-        {
-            body.timer(1,:: this.attributes.addClass("shown"));
-            view.docunmentComplete();
-        }
+        body.attributes.addClass("minize");
+    }
 
-        //Drag and drop
-        function movable() // install movable window handler
-        {
-          var xoff,yoff;
-          var dragging = false;
-          var body = $(body);
+    $(#btn_debug).onClick = function() {
+        selectTab($(#btn_tab_setting), $(#page_setting), "setting");
+    }
+    $(#link_close_extend_area).onClick = function() { }
 
-          function doDrag()
-          {
-            while( dragging )
-              view.doEvent();
-          }
+    $(#btn_power).onClick = function() { $(#power_message).attributes.addClass("shown"); }
+    $(#link_exit).onClick = function() { $(#power_message).attributes.removeClass("shown"); }
+    $(#link_reboot).onClick = $(#link_exit).onClick;
+    $(#link_shutdown).onClick = $(#link_exit).onClick;
 
-          function onMouseDown(evt)
-          {
-            if( evt.target !== body && evt.target !== $(#title-area) && evt.target !== $(#title-icon) && evt.target !== $(#title))
-              return false;
+    $(#link_more_cmd).onClick = function() { $(#cmds_message).attributes.addClass("shown"); }
+    function close_cmds_tip() { $(#cmds_message).attributes.removeClass("shown"); }
+    $(#cmds_message_close).onClick = close_cmds_tip;
+
+    $(#common_message_close).onClick = function() { $(#common_message).attributes.removeClass("shown"); }
+    $(#common_message_close2).onClick = $(#common_message_close).onClick;
+    $(#update_message_close).onClick = function() { $(#update_message).attributes.removeClass("shown"); }
+    $(#update_message_update).onClick = $(#update_message_close).onClick;
+    $(#isnew_message_close).onClick = function() { $(#isnew_message).attributes.removeClass("shown"); }
+    $(#exit_message_close).onClick = function() { $(#exit_message).attributes.removeClass("shown"); }
+    $(#exit_message_close2).onClick = $(#exit_message_close).onClick;
+    $(#link_close_power_message).onClick = function() { $(#power_message).attributes.removeClass("shown"); }
+    $(#link_close_hello_message).onClick = function() { $(#hello_message).attributes.removeClass("shown"); }
+    $(#link_github).onClick = function() { view.toGithub(); }
+
+    $(#btn_top).on("mouseenter", function() { $(.tooltip.tooltip-topmost).attributes.addClass("shown"); });
+    $(#btn_top).on("mouseleave", function() { $(.tooltip.tooltip-topmost).attributes.removeClass("shown"); });
+    $(#tooltip_top).onClick = function() { $(#tooltip_top).attributes.removeClass("shown"); }
+
+    function showExitMessage() { $(#exit_message).attributes.addClass("shown"); }
+
+    function showFastTip() {
+        const tip = $(#tooltip_fast);
+        tip.attributes.addClass("shown");
+        body.timer(4s, function() { tip.attributes.removeClass("shown"); });
+    }
+    function closeFastTip() { $(#tooltip_fast).attributes.removeClass("shown"); }
+
+    function showWindow() {
+        body.onAnimationEnd = function() { };
+        if (!body.attributes.hasClass("shown"))
+            body.attributes.addClass("shown");
+    }
+
+    function closeWindow() {
+        body.onAnimationEnd = function() { view.exitClick(); };
+        body.attributes.removeClass("shown");
+    }
+
+    function runInspector() {
+        if (!view.inspectorIsPresent())
+            System.exec(System.home("inspector.exe"));
+        body.timer(500, function() {
+            if (var connectToInspector = view.connectToInspector)
+                connectToInspector($(html));
+        });
+    }
+
+    function checkGfx() {
+        if (!view.backend)
+            view.msgbox(#alert, "Failed to initialize layered window!");
+        return ["Unknown", "GDI+", "D2D/WARP", "D2D/DX"][view.backend];
+    }
+
+    function self.ready() {
+        body.timer(1, function() { this.attributes.addClass("shown"); });
+        view.docunmentComplete();
+    }
+
+    function movable() {
+        var xoff, yoff;
+        var dragging = false;
+        var body = $(body);
+
+        function doDrag() { while (dragging) view.doEvent(); }
+
+        function onMouseDown(evt) {
+            if (evt.target !== body && evt.target !== $(#title-area) && evt.target !== $(#title-icon) && evt.target !== $(#title))
+                return false;
             xoff = evt.x;
             yoff = evt.y;
             dragging = true;
             view.root.capture(true);
             doDrag();
             return true;
-          }
-
-          function onMouseMove(evt)
-          {
-            if( dragging )
-            {
-              view.move( evt.xScreen - xoff, evt.yScreen - yoff, true); // true - x,y are coordinates of the client area on the screen
-              return true;
-            }
-            return false;
-          }
-
-          function stopDrag()
-          {
-            if(dragging)
-            {
-              dragging = false;
-              view.root.capture(false);
-              return true;
-            }
-            return false;
-          }
-
-          function onMouseUp(evt) { return stopDrag(); }
-          function onKeyDown(evt) { if(evt.keyCode == Event.VK_ESCAPE ) return stopDrag(); }
-
-          // hookup event handlers:
-          view.root.subscribe(onMouseDown, Event.MOUSE, Event.MOUSE_DOWN );
-          view.root.subscribe(onMouseUp, Event.MOUSE, Event.MOUSE_UP );
-          view.root.subscribe(onMouseMove, Event.MOUSE, Event.MOUSE_MOVE );
-          view.root.subscribe(onKeyDown, Event.KEY, Event.KEY_DOWN );
-          return false;
         }
+        function onMouseMove(evt) {
+            if (dragging) {
+                view.move(evt.xScreen - xoff, evt.yScreen - yoff, true);
+                return true;
+            }
+            return false;
+        }
+        function stopDrag() {
+            if (dragging) {
+                dragging = false;
+                view.root.capture(false);
+                return true;
+            }
+            return false;
+        }
+        function onMouseUp(evt) { return stopDrag(); }
+        function onKeyDown(evt) { if (evt.keyCode == Event.VK_ESCAPE) return stopDrag(); }
 
-        movable();
+        view.root.subscribe(onMouseDown, Event.MOUSE, Event.MOUSE_DOWN);
+        view.root.subscribe(onMouseUp, Event.MOUSE, Event.MOUSE_UP);
+        view.root.subscribe(onMouseMove, Event.MOUSE, Event.MOUSE_MOVE);
+        view.root.subscribe(onKeyDown, Event.KEY, Event.KEY_DOWN);
+        return false;
+    }
 
-        self.on("complete", function() {
-          stdout.println("got complete");
-          //$(button#test).text = "complete";
-        });
-
-    </script>
+    movable();
+</script>
 </body>
 </html>
