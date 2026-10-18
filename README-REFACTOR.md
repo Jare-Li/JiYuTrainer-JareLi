@@ -145,3 +145,45 @@ Get-AuthenticodeSignature .\dist\JiYuTrainer.exe | Format-List Status, StatusMes
 - Sciter：<https://sciter.com/>（随上游分发）
 - curl、mhook、MemoryModule、XZip/XUnZip：见上游 `README.md`
 - 原版权声明与完整 MIT 文本见 `LICENSE`、`NOTICE`。
+
+## 9. Windows SmartScreen 提示
+
+首次运行从网络下载的 exe 时，Windows 可能显示“Windows 已保护你的电脑”。这是 SmartScreen 对“未知发布者/低信誉文件”的提示，不代表文件损坏。
+
+最快处理：
+
+1. 点击提示中的 **“更多信息”**，再点 **“仍要运行”**。
+2. 如果没有“仍要运行”：右键 exe → **属性** → **常规** → 勾选 **“解除锁定”** → 确定。
+3. 或者在 PowerShell 中执行：
+
+```powershell
+Unblock-File -Path .\JiYuTrainer.exe
+```
+
+如果是从 zip 解压的，先对 zip 执行 `Unblock-File` 再解压，或解压后对整个目录执行：
+
+```powershell
+Get-ChildItem -Recurse | Unblock-File
+```
+
+为什么仍会提示：
+
+- 本版本使用 `CN=Jare-Li` 的**自签名**证书，Windows 不信任该根证书，且文件没有 SmartScreen 信誉。
+- 自签名可以证明“文件未被篡改”，但不能获得 Microsoft 的发布者信誉。
+
+仅在自己的机器上消除“未知发布者”（可选，需谨慎）：
+
+```powershell
+# 只导入公钥证书，不导入私钥
+Import-Certificate -FilePath .\build\certs\Jare-Li.cer -CertStoreLocation Cert:\CurrentUser\Root
+Import-Certificate -FilePath .\build\certs\Jare-Li.cer -CertStoreLocation Cert:\CurrentUser\TrustedPublisher
+```
+
+导入后 `Get-AuthenticodeSignature` 应显示 `Valid`；但 SmartScreen 仍可能提示，直到文件积累信誉。不要把自签名根证书导入到不信任的机器。
+
+分发或长期使用：
+
+- 购买 OV/EV 代码签名证书；EV 证书可获得较快的 SmartScreen 信誉。
+- 企业环境用 AppLocker/WDAC 添加允许规则。
+- 不建议为了一个程序全局关闭 SmartScreen。
+- 如果系统启用的是 **Smart App Control**（提示中没有“仍要运行”），关闭它通常不可逆，需重置系统；优先使用受信任签名或企业允许规则。
