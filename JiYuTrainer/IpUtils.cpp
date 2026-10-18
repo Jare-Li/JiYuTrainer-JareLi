@@ -61,4 +61,19 @@ std::vector<std::wstring> SplitIpList(const std::wstring& text) {
     return result;
 }
 
+std::vector<std::wstring> BuildScanRange(const std::wstring& base, int start, int end) {
+    std::vector<std::wstring> result;
+    if (start < 0) start = 0;
+    if (end > 255) end = 255;
+    if (end < start) return result;
+
+    result.reserve(static_cast<size_t>(end - start + 1));
+    for (int i = start; i <= end; ++i) {
+        wchar_t suffix[8] = {0};
+        swprintf_s(suffix, L".%d", i);
+        result.push_back(base + suffix);
+    }
+    return result;
+}
+
 } // namespace IpUtils

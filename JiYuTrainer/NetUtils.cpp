@@ -109,22 +109,23 @@ bool NetUtils::GetHostNameByIP(LPCWSTR ipAddr, std::wstring* name)
 }
 bool NetUtils::GetMacByIP(LPCWSTR ipAddr, ULONG srcIp, unsigned char* mac)
 {
-	ULONG mac_address[2];
+	ULONG mac_address[2] = { 0, 0 };
 	ULONG mac_address_len = 6;
 
 	struct in_addr s;
-	InetPton(AF_INET, ipAddr, &s);
-
-	SendARP((IPAddr)s.s_addr, (IPAddr)srcIp, mac_address, &mac_address_len);
-
-	if (mac_address_len)
-	{
-		BYTE* mac_address_buffer = (BYTE*)&mac_address;
-		for (int i = 0; i < (int)mac_address_len; i++)
-			mac[i] = (unsigned char)mac_address_buffer[i];
-	}
-	else
+	if (InetPton(AF_INET, ipAddr, &s) != 1)
 		return false;
+
+	// SendARP sets the real length on success. The previous code ignored the
+	// return value, so a failed request could be reported as a bogus host.
+	DWORD result = SendARP((IPAddr)s.s_addr, (IPAddr)srcIp, mac_address, &mac_address_len);
+	if (result != NO_ERROR || mac_address_len < 6)
+		return false;
+
+	BYTE* mac_address_buffer = (BYTE*)&mac_address;
+	for (int i = 0; i < 6; i++)
+		mac[i] = (unsigned char)mac_address_buffer[i];
+
 	return true;
 }
 

@@ -283,6 +283,10 @@ def main() -> int:
           "MainWindow must create a 960x540 client window")
     check("ui/window_16x9_html", lambda: "width: 960px; height: 540px" in main_html,
           "card must be fixed 16:9")
+    check("ui/attack_window_size", lambda: "896, 760" in read_text(UI / "AttackWindow.cpp", "gbk"),
+          "UDP window should be 896x760")
+    check("ui/scan_window_size", lambda: "580, 700" in read_text(UI / "ScanIPWindow.cpp", "gbk"),
+          "scan window should be 580x700")
 
     res_refs = set(re.findall(r"res:([^\"')\s]+)", main_html + read_text(UI / "AttackWindow.html")))
     missing_res = [ref for ref in res_refs if not (UI / "res" / ref).exists()]

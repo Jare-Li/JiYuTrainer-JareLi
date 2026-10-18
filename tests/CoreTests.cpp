@@ -64,6 +64,14 @@ int main() {
     Check("split_empty", IpUtils::SplitIpList(L"   ").empty());
     Check("trim", IpUtils::Trim(L" \t abc \r\n") == L"abc");
 
+    const auto full = IpUtils::BuildScanRange(L"192.168.1", 0, 255);
+    Check("scan_range_full", full.size() == 256 && full.front() == L"192.168.1.0" && full.back() == L"192.168.1.255");
+    const auto tail = IpUtils::BuildScanRange(L"10.0.0", 250, 255);
+    Check("scan_range_tail", tail.size() == 6 && tail.back() == L"10.0.0.255");
+    const auto clamped = IpUtils::BuildScanRange(L"10.0.0", 254, 300);
+    Check("scan_range_clamped", clamped.size() == 2 && clamped.back() == L"10.0.0.255");
+    Check("scan_range_inverted", IpUtils::BuildScanRange(L"10.0.0", 200, 100).empty());
+
     // Base packet identities
     const unsigned char header[8] = {0x44, 0x4d, 0x4f, 0x43, 0x00, 0x00, 0x01, 0x00};
     for (int i = 0; i < 4; ++i) {

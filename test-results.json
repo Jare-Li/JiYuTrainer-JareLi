@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-18T21:58:02",
-  "passed": 68,
+  "date": "2026-10-18T22:11:44",
+  "passed": 74,
   "failed": 0,
-  "total": 68,
+  "total": 74,
   "pass_rate": 100.0,
   "tests": [
     {
@@ -72,6 +72,26 @@
     },
     {
       "name": "core/trim",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/scan_range_full",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/scan_range_tail",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/scan_range_clamped",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "core/scan_range_inverted",
       "ok": true,
       "detail": ""
     },
@@ -173,12 +193,12 @@
     {
       "name": "core/summary",
       "ok": true,
-      "detail": "33 passed, 0 failed"
+      "detail": "37 passed, 0 failed"
     },
     {
       "name": "artifact/exe_exists",
       "ok": true,
-      "detail": "4792648 bytes"
+      "detail": "4763976 bytes"
     },
     {
       "name": "artifact/hook_exists",
@@ -277,6 +297,16 @@
     },
     {
       "name": "ui/window_16x9_html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/attack_window_size",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ui/scan_window_size",
       "ok": true,
       "detail": ""
     },

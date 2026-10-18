@@ -16,4 +16,9 @@ std::vector<std::wstring> SplitIpList(const std::wstring& text);
 // Trims ASCII whitespace from both ends.
 std::wstring Trim(const std::wstring& text);
 
+// Builds the inclusive host range base.start .. base.end, e.g.
+// BuildScanRange(L"192.168.1", 0, 255) yields 256 addresses.
+// Invalid/negative octets are clamped; an inverted range yields an empty list.
+std::vector<std::wstring> BuildScanRange(const std::wstring& base, int start, int end);
+
 } // namespace IpUtils

@@ -12,7 +12,7 @@
 extern int screenWidth, screenHeight;
 
 AttackWindow::AttackWindow(HWND parentHWnd) : 
-	CommonWindow(parentHWnd, 620, 640, 
+	CommonWindow(parentHWnd, 896, 760, 
 		L"JiYuTrainerAttackWindow", L"UDP 重放攻击 - 原样保留 (by ht0Ruial)",
 		IDR_HTML_ATTACK)
 {

@@ -4,15 +4,15 @@
 #include "../JiYuTrainer/SysHlp.h"
 #include "../JiYuTrainer/NetUtils.h"
 #include "../JiYuTrainer/StringSplit.h"
+#include "../JiYuTrainer/IpUtils.h"
 #include <regex>
 
 extern int screenWidth, screenHeight;
 
-ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, 330, 360, L"JiYuTrainerScanIPWindow", L"扫描局域网IP", IDR_HTML_SCANIP)
+ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, 580, 700, L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
 {
 	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE) ^ (WS_MAXIMIZEBOX | WS_SIZEBOX));
 	init();
-	asset_add_ref();
 	Show();
 }
 ScanIPWindow::~ScanIPWindow()
@@ -96,8 +96,7 @@ void ScanIPWindow::GetCurrentIP() {
 void ScanIPWindow::FillIpScanInput(int index) {
 
 	scanCurrentIP = currentIPArr[index];
-	std::wregex express(L"^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
-	if (std::regex_match(scanCurrentIP.begin(), scanCurrentIP.end(), express)) {
+	if (IpUtils::IsValidIPv4(scanCurrentIP)) {
 		int lastDotIndex = scanCurrentIP.find_last_of(L'.');
 		if (lastDotIndex > 0) {
 			std::wstring ind = scanCurrentIP.substr(0, lastDotIndex);
@@ -139,14 +138,21 @@ void ScanIPWindow::RefreshIpList() {
 
 	std::wstring start = input_start_add.get_value().get(L"").c_str();
 	std::wstring end = input_end_add.get_value().get(L"").c_str();
-	std::wregex express(L"^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
 
-	if (!std::regex_match(start.begin(), start.end(), express)) {
+	if (!IpUtils::IsValidIPv4(start)) {
 		MessageBox(_hWnd, L"起始地址不正确，只支持IPV4地址 (xx.xx.xx.xx) 格式", L"提示", MB_ICONEXCLAMATION);
 		return;
 	}
-	if (!std::regex_match(end.begin(), end.end(), express)) {
+	if (!IpUtils::IsValidIPv4(end)) {
 		MessageBox(_hWnd, L"结束地址不正确，只支持IPV4地址 (xx.xx.xx.xx) 格式", L"提示", MB_ICONEXCLAMATION);
+		return;
+	}
+
+	auto lastOctet = [](const std::wstring& ip) -> int {
+		return _wtoi(ip.substr(ip.find_last_of(L'.') + 1).c_str());
+	};
+	if (lastOctet(start) > lastOctet(end)) {
+		MessageBox(_hWnd, L"起始地址不能大于结束地址", L"提示", MB_ICONEXCLAMATION);
 		return;
 	}
 

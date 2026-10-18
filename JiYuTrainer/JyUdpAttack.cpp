@@ -6,6 +6,7 @@
 #include "AppPublic.h"
 #include "TrainerWorker.h"
 #include "StringHlp.h"
+#include "IpUtils.h"
 
 JyUdpAttack* JyUdpAttack::currentJyUdpAttack = nullptr;
 extern LoggerInternal* currentLogger;
@@ -211,17 +212,16 @@ DWORD __stdcall JyUdpAttack::ScanNetworkIPThread(JyUdpAttack* inst)
     int startIndexNumber = _wtoi(startIndex.c_str());
     int endIndexNumber = _wtoi(endIndex.c_str());
 
-    if (startIndexNumber < 0) startIndexNumber = 0;
-    if (endIndexNumber > 255) startIndexNumber = 255;
-
     InetPton(AF_INET, inst->saningIPsAddrCurrent.c_str(), &inst->saningIPsAddrLocal);
 
-    std::vector<std::wstring> addressList;
-
-    for (int i = startIndexNumber; i <= endIndexNumber; i++) {
-        wchar_t buf[32];
-        swprintf_s(buf, L"%s.%d", inst->saningIPsAddrPrev.c_str(), i);
-        addressList.push_back(std::wstring(buf));
+    // Build the complete inclusive range. The old implementation divided by
+    // 10 and silently dropped the tail (e.g. 256 hosts -> only 250 scanned).
+    std::vector<std::wstring> addressList =
+        IpUtils::BuildScanRange(inst->saningIPsAddrPrev, startIndexNumber, endIndexNumber);
+    if (addressList.empty()) {
+        inst->isSaningIPs = false;
+        SendMessage(inst->saningIPsReceivehWnd, WM_MY_SCAN_IP_FINISH, NULL, NULL);
+        return 0;
     }
 
     WSADATA sock;
@@ -229,7 +229,10 @@ DWORD __stdcall JyUdpAttack::ScanNetworkIPThread(JyUdpAttack* inst)
     if (WSAStartup(MAKEWORD(2, 2), &sock) == 0)
     {
         int current = 0;
-        int count = addressList.size() / 10; if (count < 1) count = 1;
+        int count = (static_cast<int>(addressList.size()) + 9) / 10;
+        // Set the expected worker count before starting threads; otherwise a
+        // fast worker can decrement before the next increment and end the scan
+        // early (or underflow the counter).
         inst->saningIPsWorkingThread = count;
         for (auto i = 0; i < count; i++) {
             ScanIPSubTask* currentTask = new ScanIPSubTask();
@@ -237,7 +240,16 @@ DWORD __stdcall JyUdpAttack::ScanNetworkIPThread(JyUdpAttack* inst)
                 currentTask->address.push_back(addressList[current]);
             currentTask->inst = inst;
 
-            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ScanNetworkIPSubTaskThread, currentTask, NULL, NULL);
+            HANDLE thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ScanNetworkIPSubTaskThread, currentTask, NULL, NULL);
+            if (thread) {
+                CloseHandle(thread);
+            }
+            else {
+                delete currentTask;
+                inst->saningIPsLock.Lock();
+                inst->saningIPsWorkingThread--;
+                inst->saningIPsLock.UnLock();
+            }
         }
 
         while (inst->saningIPsWorkingThread > 0)

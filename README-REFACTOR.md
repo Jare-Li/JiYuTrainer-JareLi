@@ -6,6 +6,8 @@
 - 版本：`1.7.6.0515 (Jare-Li Refactor)`
 - 平台：Windows 7 / 8 / 8.1 / 10 / 11，x86（32 位主程序，可在 64 位系统运行）
 - 主窗口：`960×540`（16:9），左侧状态/功能导航，右侧内容区
+- UDP 重放：`896×760`，左右两栏
+- 主机扫描：`580×700`
 - 许可：MIT（见 `LICENSE`）
 - 签名：自签名 Authenticode 证书 `CN=Jare-Li`（默认不受系统信任）
 
@@ -19,7 +21,7 @@
 | 保留攻击模块 | 是。`AttackWindow` / `JyUdpAttack` / 包字节布局原样保留，未增加攻击方式，未修改协议 |
 | 界面简洁 | 主窗口改为 **960×540（16:9）左右分栏**：左侧状态卡片 + 功能导航，右侧显示当前功能；保留浅色配色与原控件行为 |
 | 构建可复现 | 是。VS2022 v143 + Windows SDK，`build.ps1` 一键构建 |
-| 测试通过率 ≥ 90% | 是。**68/68 = 100.0%**（2026-10-18 本机实测） |
+| 测试通过率 ≥ 90% | 是。**74/74 = 100.0%**（2026-10-18 本机实测） |
 | Jare-Li 签名 | 版本信息、关于页署名、自签名 Authenticode 证书三处一致 |
 
 ## 2. 功能清单（全部保留）
@@ -47,7 +49,9 @@
 | `JiYuTrainerUI/AttackWindow.html` | 全新表单式 UI；保留全部原控件 id 与警告文案 |
 | `JiYuTrainer/JyPacket.h/.cpp` | 从 `JyUdpAttack` 抽取纯包构造；`DMOC` 头、4 种基础包、偏移 56/100 与 1.7.6 完全一致 |
 | `JiYuTrainer/IpUtils.h/.cpp` | IPv4 校验与目标列表解析；支持逗号分隔与首尾空格 |
-| `JiYuTrainer/JyUdpAttack.cpp` | 发送函数改用 `JyPacket::Build`；报文语义不变 |
+| `JiYuTrainer/JyUdpAttack.cpp` | 发送函数改用 `JyPacket::Build`；修复扫描范围尾部丢失、线程计数竞态 |
+| `JiYuTrainer/NetUtils.cpp` | `SendARP` 返回值与 MAC 长度校验，避免把失败请求误报为在线主机 |
+| `JiYuTrainerUI/ScanIPWindow.*` | 扫描窗口放大到 580×700，表单/结果列表重排，改用 `IpUtils` 校验 |
 | `JiYuTrainerUI/AttackWindow.cpp` | 改用 `IpUtils`；窗口尺寸 620×640 |
 | `JiYuTrainer/JiYuTrainer.rc` | 版本信息、Jare-Li 署名、MIT 归属与协议文案 |
 | `tests/CoreTests.cpp` | 33 项 C++ 单元/回归测试（IP、UTF-16、包字节、哈希、边界） |
@@ -110,10 +114,10 @@ python tests\run_tests.py
 3. **界面/功能/许可测试**：83 个主界面 id 完整且无重复、攻击窗口 id、功能处理函数、MIT 归属、签名主体。
 
 ```text
-RESULT: 68/68 passed, 0 failed, 100.0%
+RESULT: 74/74 passed, 0 failed, 100.0%
 ```
 
-通过率按“通过数 / 总数”计算，发布门槛为 **≥ 90%**。本次实测 **68/68 = 100.0%**，结果写入 `test-report.md` 与 `test-results.json`。
+通过率按“通过数 / 总数”计算，发布门槛为 **≥ 90%**。本次实测 **74/74 = 100.0%**，结果写入 `test-report.md` 与 `test-results.json`。
 
 ## 6. 签名
 
@@ -187,3 +191,13 @@ Import-Certificate -FilePath .\build\certs\Jare-Li.cer -CertStoreLocation Cert:\
 - 企业环境用 AppLocker/WDAC 添加允许规则。
 - 不建议为了一个程序全局关闭 SmartScreen。
 - 如果系统启用的是 **Smart App Control**（提示中没有“仍要运行”），关闭它通常不可逆，需重置系统；优先使用受信任签名或企业允许规则。
+
+## 10. IP 扫描自检
+
+本次修复了三个会影响扫描可用性的问题：
+
+1. **范围尾部丢失**：原实现按 `size / 10` 开线程，256 个地址只扫描前 250 个。现改为 `(size + 9) / 10`，完整覆盖起止地址。
+2. **失败被当成功**：`SendARP` 的返回值被忽略，失败时可能用未初始化的 MAC 长度误判为在线。现在要求 `NO_ERROR` 且长度为 6。
+3. **线程计数竞态**：先创建线程再累加工作计数，快速线程可能提前把计数减到 0。现在先设置预期计数，创建失败时再安全回退。
+
+自检方式：在本机网段取本机地址前后各 2 个地址（共 5 个）执行扫描，窗口正常从“正在扫描”变为“扫描完成，重新扫描”，并返回本机 `192.168.0.112` 的 MAC 地址。该自检不修改目标主机，也不会扫描跨网段地址。

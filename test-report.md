@@ -1,9 +1,9 @@
 # Test Report
 
-- Date: 2026-10-18T21:58:02
-- Passed: 68
+- Date: 2026-10-18T22:11:44
+- Passed: 74
 - Failed: 0
-- Total: 68
+- Total: 74
 - Pass rate: 100.0%
 
 | Test | Result | Detail |
@@ -22,6 +22,10 @@
 | `core/split_spaces_and_empty` | PASS |  |
 | `core/split_empty` | PASS |  |
 | `core/trim` | PASS |  |
+| `core/scan_range_full` | PASS |  |
+| `core/scan_range_tail` | PASS |  |
+| `core/scan_range_clamped` | PASS |  |
+| `core/scan_range_inverted` | PASS |  |
 | `core/basepack_header_0` | PASS |  |
 | `core/basepack_header_1` | PASS |  |
 | `core/basepack_header_2` | PASS |  |
@@ -41,8 +45,8 @@
 | `core/packet_command_max_chars` | PASS |  |
 | `core/packet_command_capped` | PASS |  |
 | `core/packet_sizes` | PASS |  |
-| `core/summary` | PASS | 33 passed, 0 failed |
-| `artifact/exe_exists` | PASS | 4792648 bytes |
+| `core/summary` | PASS | 37 passed, 0 failed |
+| `artifact/exe_exists` | PASS | 4763976 bytes |
 | `artifact/hook_exists` | PASS | 668488 bytes |
 | `artifact/sciter_exists` | PASS | 5955632 bytes |
 | `artifact/build_script` | PASS | build.ps1 |
@@ -63,6 +67,8 @@
 | `ui/main_window_title` | PASS |  |
 | `ui/window_16x9_cpp` | PASS |  |
 | `ui/window_16x9_html` | PASS |  |
+| `ui/attack_window_size` | PASS |  |
+| `ui/scan_window_size` | PASS |  |
 | `ui/main_res_refs` | PASS |  |
 | `ui/attack_ids_complete` | PASS |  |
 | `ui/attack_warning` | PASS |  |

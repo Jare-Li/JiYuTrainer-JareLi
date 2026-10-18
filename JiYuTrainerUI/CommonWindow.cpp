@@ -125,7 +125,7 @@ LRESULT CommonWindow::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	{
 	case WM_GETMINMAXINFO: {
 		MINMAXINFO* lpmm = (MINMAXINFO*)lParam;
-		lpmm->ptMaxTrackSize = { 625, 660 };
+		lpmm->ptMaxTrackSize = { 1200, 950 };
 		lpmm->ptMinTrackSize = { 360, 360 };
 		return 0;
 	}
