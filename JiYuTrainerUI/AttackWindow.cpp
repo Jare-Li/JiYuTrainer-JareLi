@@ -133,8 +133,8 @@ void AttackWindow::SendCmd() {
 		AddStringToReult(L"请输入要发送的命令！");
 		return;
 	}
-	if (cmd.length() > 512) {
-		AddStringToReult(L"命令太长了，请删掉一些");
+	if (cmd.length() > 462) {
+		AddStringToReult(L"命令太长了，请删掉一些（最多 462 个字符）");
 		return;
 	}
 	std::vector<std::wstring> ips;
