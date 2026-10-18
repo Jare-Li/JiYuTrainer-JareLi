@@ -1,3 +1,9 @@
+> **Jare-Li Refactor** — 本仓库是 `imengyu/JiYuTrainer` 1.7.6 的 MIT 重构版。
+> 重构说明、构建与测试见 [README-REFACTOR.md](README-REFACTOR.md)。
+> **Code signing policy**: [CODE_SIGNING.md](CODE_SIGNING.md)
+>
+> 仅限用于自己拥有或已获授权的设备；UDP 重放模块请勿用于第三方主机。
+
 <p align="center">
   <a href="#">
     <img alt="JiYu Trainer" src="https://imengyu.top/assets/images/jy/JiYuTrainerLogo256.png" width="128">

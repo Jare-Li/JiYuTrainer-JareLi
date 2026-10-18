@@ -201,3 +201,10 @@ Import-Certificate -FilePath .\build\certs\Jare-Li.cer -CertStoreLocation Cert:\
 3. **线程计数竞态**：先创建线程再累加工作计数，快速线程可能提前把计数减到 0。现在先设置预期计数，创建失败时再安全回退。
 
 自检方式：在本机网段取本机地址前后各 2 个地址（共 5 个）执行扫描，窗口正常从“正在扫描”变为“扫描完成，重新扫描”，并返回本机 `192.168.0.112` 的 MAC 地址。该自检不修改目标主机，也不会扫描跨网段地址。
+
+## 11. Code signing policy
+
+完整政策见 [CODE_SIGNING.md](CODE_SIGNING.md)。
+
+Free code signing provided by [SignPath.io](https://about.signpath.io),
+certificate by [SignPath Foundation](https://signpath.org).
