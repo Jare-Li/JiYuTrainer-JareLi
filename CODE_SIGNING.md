@@ -3,8 +3,8 @@
 Free code signing provided by [SignPath.io](https://about.signpath.io),
 certificate by [SignPath Foundation](https://signpath.org).
 
-- Committers and reviewers: Jare-Li (GitHub: `<your-github-handle>`)
-- Approvers: Jare-Li
+- Committers and reviewers: Jare-Li ([@Jare-Li](https://github.com/Jare-Li))
+- Approvers: Jare-Li ([@Jare-Li](https://github.com/Jare-Li))
 
 ## Scope
 

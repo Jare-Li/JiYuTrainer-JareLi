@@ -3,8 +3,8 @@
 这个目录里的文件是**覆盖到项目根目录**用的。  
 先做两件事：
 
-1. 把 `@Jare-Li` 改成你的 GitHub 账号/团队。
-2. 把 `README.md` 里的 `<your-name>` 改成你的 GitHub 用户名。
+1. `Jare-Li` 既是你的姓名，也是 GitHub 用户名（`https://github.com/Jare-Li`）。
+2. 无需替换姓名；确认仓库地址是 `Jare-Li/JiYuTrainer-JareLi` 即可。
 
 ---
 
@@ -97,7 +97,7 @@ cd F:\dshwrok\JiYuTrainer-1.7.6
 git add .
 git commit -m "docs: prepare open-source publishing"
 
-git remote add origin https://github.com/<你的用户名>/JiYuTrainer-JareLi.git
+git remote add origin https://github.com/Jare-Li/JiYuTrainer-JareLi.git
 git branch -M main
 git push -u origin main
 ```
@@ -105,7 +105,7 @@ git push -u origin main
 如果已经存在 `origin`：
 
 ```powershell
-git remote set-url origin https://github.com/<你的用户名>/JiYuTrainer-JareLi.git
+git remote set-url origin https://github.com/Jare-Li/JiYuTrainer-JareLi.git
 git push -u origin main
 ```
 
@@ -173,7 +173,7 @@ git push origin v1.7.6-jareli.1
 1. 打开 <https://signpath.org/apply>
 2. 填写：
    - 项目名：`JiYuTrainer Jare-Li Refactor`
-   - 仓库：`https://github.com/<你的用户名>/JiYuTrainer-JareLi`
+   - 仓库：`https://github.com/Jare-Li/JiYuTrainer-JareLi`
    - License：MIT
    - 构建命令：`.\build.ps1 -Sign`
    - 测试命令：`python tests\run_tests.py`

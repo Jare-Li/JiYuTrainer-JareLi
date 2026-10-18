@@ -63,7 +63,7 @@ JiYuTrainer-JareLi-1.7.6.zip
 
 ## 下载
 
-从 [Releases](https://github.com/<your-name>/JiYuTrainer-JareLi/releases) 下载：
+从 [Releases](https://github.com/Jare-Li/JiYuTrainer-JareLi/releases) 下载：
 
 ```text
 JiYuTrainer-JareLi-1.7.6.zip
@@ -76,8 +76,8 @@ JiYuTrainer-JareLi-1.7.6.zip
 Free code signing provided by [SignPath.io](https://about.signpath.io),
 certificate by [SignPath Foundation](https://signpath.org).
 
-- Committers and reviewers: `@Jare-Li`
-- Approvers: `@Jare-Li`
+- Committers and reviewers: [Jare-Li](https://github.com/Jare-Li)
+- Approvers: [Jare-Li](https://github.com/Jare-Li)
 
 完整政策、隐私说明与发布验证流程见 [CODE_SIGNING.md](CODE_SIGNING.md)。
 
