@@ -11,8 +11,15 @@
 
 extern int screenWidth, screenHeight;
 
+static int FitAttackWidth(int desired) {
+    return (screenWidth > 0 && desired > screenWidth - 40) ? screenWidth - 40 : desired;
+}
+static int FitAttackHeight(int desired) {
+    return (screenHeight > 0 && desired > screenHeight - 80) ? screenHeight - 80 : desired;
+}
+
 AttackWindow::AttackWindow(HWND parentHWnd) : 
-	CommonWindow(parentHWnd, 896, 760, 
+	CommonWindow(parentHWnd, FitAttackWidth(896), FitAttackHeight(760), 
 		L"JiYuTrainerAttackWindow", L"UDP 重放攻击 - 原样保留 (by ht0Ruial)",
 		IDR_HTML_ATTACK)
 {
@@ -39,6 +46,7 @@ bool AttackWindow::on_event(HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, 
 	{
 		sciter::string id = ele.get_attribute("id");
 		if (id == L"btn_scan_ip") {
+			currentApp->GetLogger()->Log(L"[UDP] open scan window");
 			if (currentScanIPWnd)
 				currentScanIPWnd->Show();
 			else

@@ -218,6 +218,8 @@ DWORD __stdcall JyUdpAttack::ScanNetworkIPThread(JyUdpAttack* inst)
     // 10 and silently dropped the tail (e.g. 256 hosts -> only 250 scanned).
     std::vector<std::wstring> addressList =
         IpUtils::BuildScanRange(inst->saningIPsAddrPrev, startIndexNumber, endIndexNumber);
+    if (currentLogger) currentLogger->Log(L"[ScanIP] range %s.%d-%d, count=%d",
+        inst->saningIPsAddrPrev.c_str(), startIndexNumber, endIndexNumber, (int)addressList.size());
     if (addressList.empty()) {
         inst->isSaningIPs = false;
         SendMessage(inst->saningIPsReceivehWnd, WM_MY_SCAN_IP_FINISH, NULL, NULL);

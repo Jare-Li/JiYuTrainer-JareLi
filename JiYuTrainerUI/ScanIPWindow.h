@@ -32,6 +32,7 @@ private:
 	void ScanFinish();
 
 	int scanCount = 0;
+    bool isScanning = false;
 	std::wstring scanCurrentIP;
 
 	void AddStringToIpList(LPCWSTR str); 

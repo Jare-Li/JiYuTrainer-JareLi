@@ -12,8 +12,8 @@
             font-size: 12px;
             padding: 16px;
             box-sizing: border-box;
-            height: 660px;
-            overflow: hidden;
+            height: 100%;
+            overflow-y: auto;
         }
         * { box-sizing: border-box; }
         .header { height: 48px; }
@@ -146,7 +146,7 @@
                 <input id="input_end_add" placeholder="192.168.1.254" />
             </div>
         </div>
-        <button type="button" class="btn" id="btn_refresh_ip_list">开始扫描主机 IP</button>
+        <a href="#" class="btn" id="btn_refresh_ip_list">开始扫描主机 IP</a>
         <div class="hint">只扫描同一网段；扫描使用 ARP，不会修改目标主机。点击结果中的 IP 可复制。</div>
     </div>
 

@@ -9,7 +9,14 @@
 
 extern int screenWidth, screenHeight;
 
-ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, 580, 700, L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
+static int FitScanWidth(int desired) {
+    return (screenWidth > 0 && desired > screenWidth - 40) ? screenWidth - 40 : desired;
+}
+static int FitScanHeight(int desired) {
+    return (screenHeight > 0 && desired > screenHeight - 80) ? screenHeight - 80 : desired;
+}
+
+ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, FitScanWidth(580), FitScanHeight(700), L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
 {
 	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE) ^ (WS_MAXIMIZEBOX | WS_SIZEBOX));
 	init();
@@ -43,6 +50,10 @@ bool ScanIPWindow::on_event(HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, 
 		if (ele.get_attribute("data-type") == L"ip_link") {
 			SysHlp::CopyToClipBoard(ele.get_attribute("data-ip").c_str());
 		}
+		else if (ele.get_attribute("id") == L"btn_refresh_ip_list") {
+			currentApp->GetLogger()->Log(L"[ScanIP] scan link clicked, scanning=%d", isScanning ? 1 : 0);
+			if (!isScanning) RefreshIpList();
+		}
 	}
 	else if (type == SELECT_VALUE_CHANGED)
 	{
@@ -53,7 +64,7 @@ bool ScanIPWindow::on_event(HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, 
 	else if (type == BUTTON_CLICK)
 	{
 		sciter::string id = ele.get_attribute("id");
-		if (id == L"btn_refresh_ip_list" && ele.enabled()) RefreshIpList();
+		if (id == L"btn_refresh_ip_list" && !isScanning) RefreshIpList();
 	}
 	return false;
 }
@@ -124,8 +135,10 @@ void ScanIPWindow::ScanAddIpToList(JyNetworkIP* data) {
 }
 void ScanIPWindow::ScanFinish() {
 
+	isScanning = false;
 	btn_refresh_ip_list.set_text(L"扫描完成，重新扫描");
 	btn_refresh_ip_list.remove_attribute("disabled");
+	currentApp->GetLogger()->Log(L"[ScanIP] finish, hosts=%d", scanCount);
 
 	if (scanCount == 0)
 		AddStringToIpList(L"没有搜索到局域网内的主机");
@@ -171,9 +184,11 @@ void ScanIPWindow::RefreshIpList() {
 
 
 	scanCount = 0;
+	isScanning = true;
 	ip_list.clear();
 	btn_refresh_ip_list.set_text(L"正在扫描请稍后...");
 	btn_refresh_ip_list.set_attribute("disabled", L"disabled");
+	currentApp->GetLogger()->Log(L"[ScanIP] start %s - %s", start.c_str(), end.c_str());
 	JyUdpAttack::currentJyUdpAttack->ScanNetworkIP(this->_hWnd, start, end, ipHost1, scanCurrentIP);
 }
 
