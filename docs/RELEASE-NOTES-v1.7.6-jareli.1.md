@@ -1,115 +1,116 @@
-# JiYuTrainer 1.7.6 — Jare-Li Refactor
+﻿# JiYuTrainer 1.7.6 鈥?Jare-Li Refactor
 
-> 基于 [imengyu/JiYuTrainer](https://github.com/imengyu/JiYuTrainer) 1.7.6（MIT License）的重构版。
-> 原版权归 **快乐的梦鱼（imengyu）** 所有；重构、UI、构建与测试由 **Jare-Li** 维护。
+> 鍩轰簬 [imengyu/JiYuTrainer](https://github.com/imengyu/JiYuTrainer) 1.7.6锛圡IT License锛夌殑閲嶆瀯鐗堛€?
+> 鍘熺増鏉冨綊 **蹇箰鐨勬ⅵ楸硷紙imengyu锛?* 鎵€鏈夛紱閲嶆瀯銆乁I銆佹瀯寤轰笌娴嬭瘯鐢?**Jare-Li** 缁存姢銆?
 
-## 本次更新
+## 鏈鏇存柊
 
-- 主界面改为 **960×540（16:9）**：左侧状态卡片 + 功能导航，右侧功能内容
-- UDP 重放窗口放大到 **896×760**，左右分栏，输入框与按钮不再重叠
-- 局域网扫描窗口放大到 **580×700**，重做表单、结果列表与状态显示
-- 修复 IP 扫描：
-  - 扫描范围尾部地址不再丢失（256 个地址完整覆盖）
-  - `SendARP` 失败不再误判为在线主机
-  - 修复扫描线程计数竞态
-  - 增加起始地址不能大于结束地址的校验
-- 保留原 1.7.6 UDP 协议字节、攻击模块与全部原有功能
-- 回归测试：**74/74 通过，100.0%**
+- 涓荤晫闈㈡敼涓?**960脳540锛?6:9锛?*锛氬乏渚х姸鎬佸崱鐗?+ 鍔熻兘瀵艰埅锛屽彸渚у姛鑳藉唴瀹?
+- UDP 閲嶆斁绐楀彛鏀惧ぇ鍒?**896脳760**锛屽乏鍙冲垎鏍忥紝杈撳叆妗嗕笌鎸夐挳涓嶅啀閲嶅彔
+- 灞€鍩熺綉鎵弿绐楀彛鏀惧ぇ鍒?**580脳700**锛岄噸鍋氳〃鍗曘€佺粨鏋滃垪琛ㄤ笌鐘舵€佹樉绀?
+- 淇 IP 鎵弿锛?
+  - 鎵弿鑼冨洿灏鹃儴鍦板潃涓嶅啀涓㈠け锛?56 涓湴鍧€瀹屾暣瑕嗙洊锛?
+  - `SendARP` 澶辫触涓嶅啀璇垽涓哄湪绾夸富鏈?
+  - 淇鎵弿绾跨▼璁℃暟绔炴€?
+  - 澧炲姞璧峰鍦板潃涓嶈兘澶т簬缁撴潫鍦板潃鐨勬牎楠?
+- 淇濈暀鍘?1.7.6 UDP 鍗忚瀛楄妭銆佹敾鍑绘ā鍧椾笌鍏ㄩ儴鍘熸湁鍔熻兘
+- 鍥炲綊娴嬭瘯锛?*74/74 閫氳繃锛?00.0%**
 
-## 资产
+## 璧勪骇
 
-| 文件 | SHA-256 |
+| 鏂囦欢 | SHA-256 |
 |---|---|
-| `JiYuTrainer-JareLi-1.7.6.zip` | `F3641DA6092D3176EF199335ADD57CF10C621209EDD995284EA1C07E779755F1` |
-| `JiYuTrainer.exe` | `16422577523A62D9A6CECBF4C1F1061013C2FC03E563974B4BA788634F069124` |
+| `JiYuTrainer-JareLi-1.7.6.zip` | `0BD42FCB3EC0CA731B9F3EDEC7DD9D3E6DEF17D79DB3B3F04D3787B9FCC6B0D4` |
+| `JiYuTrainer.exe` | `A662B378E37FBFFDA7198F55E1A709CE9ABC6BF76E34EAA20803F76CE82A166B` |
 
-> 如果你上传的是 GitHub Actions 重新构建的 zip，哈希会不同；请用下面的命令重新计算并替换。
+> 濡傛灉浣犱笂浼犵殑鏄?GitHub Actions 閲嶆柊鏋勫缓鐨?zip锛屽搱甯屼細涓嶅悓锛涜鐢ㄤ笅闈㈢殑鍛戒护閲嶆柊璁＄畻骞舵浛鎹€?
 
-## 校验 SHA-256
+## 鏍￠獙 SHA-256
 
 ```powershell
 Get-FileHash .\JiYuTrainer-JareLi-1.7.6.zip -Algorithm SHA256
 Get-FileHash .\dist\JiYuTrainer.exe -Algorithm SHA256
 ```
 
-或：
+鎴栵細
 
 ```cmd
 certutil -hashfile JiYuTrainer-JareLi-1.7.6.zip SHA256
 ```
 
-哈希一致只说明文件未被篡改；首次运行仍可能触发 SmartScreen。
+鍝堝笇涓€鑷村彧璇存槑鏂囦欢鏈绡℃敼锛涢娆¤繍琛屼粛鍙兘瑙﹀彂 SmartScreen銆?
 
-## 系统要求
+## 绯荤粺瑕佹眰
 
-- Windows 10 / 11（x86 主程序，可在 64 位系统运行）
-- 首次运行建议以管理员身份启动，以便安装 Hook/驱动
-- 不支持在未授权的第三方设备上使用 UDP 重放或扫描功能
+- Windows 10 / 11锛坸86 涓荤▼搴忥紝鍙湪 64 浣嶇郴缁熻繍琛岋級
+- 棣栨杩愯寤鸿浠ョ鐞嗗憳韬唤鍚姩锛屼互渚垮畨瑁?Hook/椹卞姩
+- 涓嶆敮鎸佸湪鏈巿鏉冪殑绗笁鏂硅澶囦笂浣跨敤 UDP 閲嶆斁鎴栨壂鎻忓姛鑳?
 
-## 安装
+## 瀹夎
 
-1. 下载并解压 `JiYuTrainer-JareLi-1.7.6.zip`
-2. 运行 `JiYuTrainer.exe`
-3. 首次运行同意用户协议
-4. 主界面可最小化到托盘；关闭窗口默认隐藏到托盘
+1. 涓嬭浇骞惰В鍘?`JiYuTrainer-JareLi-1.7.6.zip`
+2. 杩愯 `JiYuTrainer.exe`
+3. 棣栨杩愯鍚屾剰鐢ㄦ埛鍗忚
+4. 涓荤晫闈㈠彲鏈€灏忓寲鍒版墭鐩橈紱鍏抽棴绐楀彛榛樿闅愯棌鍒版墭鐩?
 
-## Windows SmartScreen 说明
+## Windows SmartScreen 璇存槑
 
-首次运行从网络下载的 exe 时，Windows 可能显示：
+棣栨杩愯浠庣綉缁滀笅杞界殑 exe 鏃讹紝Windows 鍙兘鏄剧ず锛?
 
-> Windows 已保护你的电脑
+> Windows 宸蹭繚鎶や綘鐨勭數鑴?
 
-这是 SmartScreen 对“未知发布者/低信誉文件”的提示，不是病毒报毒，也不代表文件损坏。
+杩欐槸 SmartScreen 瀵光€滄湭鐭ュ彂甯冭€?浣庝俊瑾夋枃浠垛€濈殑鎻愮ず锛屼笉鏄梾姣掓姤姣掞紝涔熶笉浠ｈ〃鏂囦欢鎹熷潖銆?
 
-### 最快处理
+### 鏈€蹇鐞?
 
-1. 点击 **“更多信息”** → **“仍要运行”**
-2. 如果没有“仍要运行”：
-   - **先对 zip 解锁**：右键 `JiYuTrainer-JareLi-1.7.6.zip` → 属性 → 常规 → 勾选 **“解除锁定”** → 确定
-   - 再解压
-3. 已经解压的话，对 exe 执行：
+1. 鐐瑰嚮 **鈥滄洿澶氫俊鎭€?* 鈫?**鈥滀粛瑕佽繍琛屸€?*
+2. 濡傛灉娌℃湁鈥滀粛瑕佽繍琛屸€濓細
+   - **鍏堝 zip 瑙ｉ攣**锛氬彸閿?`JiYuTrainer-JareLi-1.7.6.zip` 鈫?灞炴€?鈫?甯歌 鈫?鍕鹃€?**鈥滆В闄ら攣瀹氣€?* 鈫?纭畾
+   - 鍐嶈В鍘?
+3. 宸茬粡瑙ｅ帇鐨勮瘽锛屽 exe 鎵ц锛?
 
 ```powershell
 Unblock-File -Path .\JiYuTrainer.exe
 ```
 
-或对整个目录执行：
+鎴栧鏁翠釜鐩綍鎵ц锛?
 
 ```powershell
 Get-ChildItem -Recurse | Unblock-File
 ```
 
-### 为什么仍会提示
+### 涓轰粈涔堜粛浼氭彁绀?
 
-- 文件从网络下载，带有 Mark-of-the-Web
-- 当前使用 `CN=Jare-Li` 的**自签名**证书，Windows 不信任该根证书
-- 文件没有 Microsoft SmartScreen 信誉
+- 鏂囦欢浠庣綉缁滀笅杞斤紝甯︽湁 Mark-of-the-Web
+- 褰撳墠浣跨敤 `CN=Jare-Li` 鐨?*鑷鍚?*璇佷功锛學indows 涓嶄俊浠昏鏍硅瘉涔?
+- 鏂囦欢娌℃湁 Microsoft SmartScreen 淇¤獕
 
-自签名可以证明文件未被篡改，但不能获得微软的发布者信誉。  
-`Get-AuthenticodeSignature` 显示 `UnknownError` / `UntrustedRoot` 属于自签名的正常状态。
+鑷鍚嶅彲浠ヨ瘉鏄庢枃浠舵湭琚鏀癸紝浣嗕笉鑳借幏寰楀井杞殑鍙戝竷鑰呬俊瑾夈€? 
+`Get-AuthenticodeSignature` 鏄剧ず `UnknownError` / `UntrustedRoot` 灞炰簬鑷鍚嶇殑姝ｅ父鐘舵€併€?
 
-### 如果连“仍要运行”都没有
+### 濡傛灉杩炩€滀粛瑕佽繍琛屸€濋兘娌℃湁
 
-可能是 Windows 11 **Smart App Control** 或组织策略：
+鍙兘鏄?Windows 11 **Smart App Control** 鎴栫粍缁囩瓥鐣ワ細
 
-- 优先使用受信任的代码签名证书
-- 企业环境使用 AppLocker / WDAC 允许规则
-- 不建议为了一个程序全局关闭 SmartScreen
-- Smart App Control 关闭通常不可逆，请谨慎
+- 浼樺厛浣跨敤鍙椾俊浠荤殑浠ｇ爜绛惧悕璇佷功
+- 浼佷笟鐜浣跨敤 AppLocker / WDAC 鍏佽瑙勫垯
+- 涓嶅缓璁负浜嗕竴涓▼搴忓叏灞€鍏抽棴 SmartScreen
+- Smart App Control 鍏抽棴閫氬父涓嶅彲閫嗭紝璇疯皑鎱?
 
-更多说明见 [CODE_SIGNING.md](CODE_SIGNING.md) 与 [docs/FIRST-RUN.md](docs/FIRST-RUN.md)。
+鏇村璇存槑瑙?[CODE_SIGNING.md](CODE_SIGNING.md) 涓?[docs/FIRST-RUN.md](docs/FIRST-RUN.md)銆?
 
-## 安全与授权
+## 瀹夊叏涓庢巿鏉?
 
-- 本软件用于恢复本机在机房环境中的操作自由，请遵守学校、单位和实验室规定
-- UDP 重放模块可向目标主机发送命令、关机或重启请求；请仅对自己拥有或已获明确授权的设备使用
-- 不要对未授权的第三方主机使用扫描或重放功能
-- 本项目与极域电子教室、imengyu 官方无隶属关系
+- 鏈蒋浠剁敤浜庢仮澶嶆湰鏈哄湪鏈烘埧鐜涓殑鎿嶄綔鑷敱锛岃閬靛畧瀛︽牎銆佸崟浣嶅拰瀹為獙瀹よ瀹?
+- UDP 閲嶆斁妯″潡鍙悜鐩爣涓绘満鍙戦€佸懡浠ゃ€佸叧鏈烘垨閲嶅惎璇锋眰锛涜浠呭鑷繁鎷ユ湁鎴栧凡鑾锋槑纭巿鏉冪殑璁惧浣跨敤
+- 涓嶈瀵规湭鎺堟潈鐨勭涓夋柟涓绘満浣跨敤鎵弿鎴栭噸鏀惧姛鑳?
+- 鏈」鐩笌鏋佸煙鐢靛瓙鏁欏銆乮mengyu 瀹樻柟鏃犻毝灞炲叧绯?
 
-## 许可与归属
+## 璁稿彲涓庡綊灞?
 
-- 原项目：<https://github.com/imengyu/JiYuTrainer>（MIT）
-- UDP 重放原理：<https://github.com/ht0Ruial/Jiyu_udp_attack>
-- 重构：Jare-Li
-- 完整许可证见 [LICENSE](LICENSE)，第三方归属见 [NOTICE](NOTICE)
-- 上游 README：[docs/UPSTREAM-README.md](docs/UPSTREAM-README.md)
+- 鍘熼」鐩細<https://github.com/imengyu/JiYuTrainer>锛圡IT锛?
+- UDP 閲嶆斁鍘熺悊锛?https://github.com/ht0Ruial/Jiyu_udp_attack>
+- 閲嶆瀯锛欽are-Li
+- 瀹屾暣璁稿彲璇佽 [LICENSE](LICENSE)锛岀涓夋柟褰掑睘瑙?[NOTICE](NOTICE)
+- 涓婃父 README锛歔docs/UPSTREAM-README.md](docs/UPSTREAM-README.md)
+

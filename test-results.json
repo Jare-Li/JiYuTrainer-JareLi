@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-18T22:11:44",
+  "date": "2026-10-24T07:52:10",
   "passed": 74,
   "failed": 0,
   "total": 74,
@@ -198,7 +198,7 @@
     {
       "name": "artifact/exe_exists",
       "ok": true,
-      "detail": "4763976 bytes"
+      "detail": "4765000 bytes"
     },
     {
       "name": "artifact/hook_exists",
