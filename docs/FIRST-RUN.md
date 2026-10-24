@@ -1,4 +1,4 @@
-﻿# 首次运行与 SmartScreen
+# 首次运行与 SmartScreen
 
 首次运行从网络下载的 exe 时，Windows 可能显示“Windows 已保护你的电脑”。这是 SmartScreen 对“未知发布者/低信誉文件”的提示，不代表文件损坏。
 
