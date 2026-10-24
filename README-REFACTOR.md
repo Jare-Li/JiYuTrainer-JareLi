@@ -1,9 +1,9 @@
-# JiYu Trainer 1.7.6 — Jare-Li Refactor
+# JiYu Trainer 1.7.7 — Jare-Li Refactor
 
 > 基于 [imengyu/JiYuTrainer](https://github.com/imengyu/JiYuTrainer) 1.7.6（MIT License）的重构版本。
 > 原版权归 **快乐的梦鱼（imengyu）** 所有；重构、构建与签名由 **Jare-Li** 完成。
 
-- 版本：`1.7.6.0515 (Jare-Li Refactor)`
+- 版本：`1.7.7.0 (Jare-Li Refactor)`
 - 平台：Windows 7 / 8 / 8.1 / 10 / 11，x86（32 位主程序，可在 64 位系统运行）
 - 主窗口：`960×540`（16:9），左侧状态/功能导航，右侧内容区
 - UDP 重放：`896×760`，左右两栏
@@ -35,7 +35,7 @@
 - 读取极域卸载/解锁密码（注册表模式 + 解密模式）
 - 卸载极域网络过滤驱动（`TDNetFilter`）
 - 托盘图标、全局热键显示/隐藏、紧急全屏
-- 自动检查更新（上游更新服务；当前版本与上游 1.7.6 对齐）
+- 自动检查更新（上游更新服务；当前版本 1.7.7，高于上游 1.7.6）
 - 内置驱动、Hook DLL、Sciter 运行时，单 exe 自解压
 - **UDP 重放窗口（原样保留）**：文字消息、CMD、远程关机、远程重启、局域网扫描、端口检测
 
@@ -89,9 +89,9 @@ pwsh -File .\build.ps1 -Sign -SkipTests
 
 输出：
 
-- `JiYuTrainer-1.7.6/Release/JiYuTrainer.exe`
+- `Release/JiYuTrainer.exe`
 - `dist/`：exe、Hook DLL、sciter.dll、LICENSE、NOTICE、README
-- `JiYuTrainer-JareLi-1.7.6.zip`
+- `JiYuTrainer-JareLi-1.7.7.zip`
 
 说明：
 
@@ -208,3 +208,7 @@ Import-Certificate -FilePath .\build\certs\Jare-Li.cer -CertStoreLocation Cert:\
 
 Free code signing provided by [SignPath.io](https://about.signpath.io),
 certificate by [SignPath Foundation](https://signpath.org).
+
+## 12. v1.7.7 更新说明
+
+见 [docs/UPDATE-v1.7.7.md](docs/UPDATE-v1.7.7.md)。

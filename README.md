@@ -1,4 +1,4 @@
-# JiYu Trainer 1.7.6 — Jare-Li Refactor
+# JiYu Trainer 1.7.7 — Jare-Li Refactor
 
 > 基于 [imengyu/JiYuTrainer](https://github.com/imengyu/JiYuTrainer) 1.7.6（MIT License）的重构版。
 > 原版权归 **快乐的梦鱼（imengyu）** 所有；重构、UI、构建与测试由 **Jare-Li** 维护。
@@ -42,7 +42,7 @@ python tests\run_tests.py
 dist\JiYuTrainer.exe
 dist\JiYuTrainerHooks.dll
 dist\sciter.dll
-JiYuTrainer-JareLi-1.7.6.zip
+JiYuTrainer-JareLi-1.7.7.zip
 ```
 
 ## 测试
@@ -66,8 +66,10 @@ JiYuTrainer-JareLi-1.7.6.zip
 从 [Releases](https://github.com/Jare-Li/JiYuTrainer-JareLi/releases) 下载：
 
 ```text
-JiYuTrainer-JareLi-1.7.6.zip
+JiYuTrainer-JareLi-1.7.7.zip
 ```
+
+更新说明：[docs/UPDATE-v1.7.7.md](docs/UPDATE-v1.7.7.md)
 
 首次运行时如果出现 **Windows SmartScreen**，处理方式见 [首次运行说明](docs/FIRST-RUN.md) 或 [CODE_SIGNING.md](CODE_SIGNING.md)。
 

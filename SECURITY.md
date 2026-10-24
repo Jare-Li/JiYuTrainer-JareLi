@@ -4,7 +4,7 @@
 
 | Version | Supported |
 |---|---|
-| 1.7.6.x (Jare-Li Refactor) | ✅ |
+| 1.7.7.x (Jare-Li Refactor) | ✅ |
 | older / upstream builds | ❌ |
 
 ## Reporting a vulnerability

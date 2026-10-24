@@ -155,15 +155,15 @@ git push -u origin main
 ## 7. 发布 Release
 
 ```powershell
-git tag v1.7.6-jareli.1
-git push origin v1.7.6-jareli.1
+git tag v1.7.7
+git push origin v1.7.7
 ```
 
 在 GitHub → **Releases → Draft a new release**：
 
-- Tag：`v1.7.6-jareli.1`
-- Title：`JiYuTrainer 1.7.6 — Jare-Li Refactor`
-- 上传：`JiYuTrainer-JareLi-1.7.6.zip`
+- Tag：`v1.7.7`
+- Title：`JiYuTrainer 1.7.7 — Jare-Li Refactor`
+- 上传：`JiYuTrainer-JareLi-1.7.7.zip`
 - 说明中写明 SHA-256、系统要求、SmartScreen 处理方式
 
 ---
@@ -177,7 +177,7 @@ git push origin v1.7.6-jareli.1
    - License：MIT
    - 构建命令：`.\build.ps1 -Sign`
    - 测试命令：`python tests\run_tests.py`
-   - 发布包：`JiYuTrainer-JareLi-1.7.6.zip`
+   - 发布包：`JiYuTrainer-JareLi-1.7.7.zip`
 3. 确保 README 首页有 **Code signing policy** 链接
 4. 通过后安装 SignPath GitHub App
 5. 在 GitHub Secrets 添加 `SIGNPATH_API_TOKEN`
