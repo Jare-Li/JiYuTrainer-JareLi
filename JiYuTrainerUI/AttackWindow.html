@@ -12,7 +12,8 @@
             font-size: 12px;
             padding: 18px;
             box-sizing: border-box;
-            height: 100%;
+            height: auto;
+            min-height: 100%;
             overflow-y: auto;
         }
         * { box-sizing: border-box; }
@@ -84,7 +85,7 @@
         }
         .inline { position: relative; }
         .inline .grow { display: block; width: 246px; }
-        .inline.small .grow { width: 380px; }
+        .inline.small .grow { width: 360px; }
         .inline .btn { position: absolute; right: 0; top: 0; }
 
         textarea, input[type="number"], input[type="text"] {
@@ -118,6 +119,7 @@
             white-space: nowrap;
             border: none;
             cursor: pointer;
+            font-family: inherit;
         }
         .btn:hover { background: #e2e8f0; }
         .btn-primary { background: #2ea4f0; color: #ffffff; }
@@ -157,6 +159,10 @@
         }
         .footer a { color: #0369a1; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
+        @media (max-width: 640px) {
+            .header { height: auto; padding-right: 0; padding-bottom: 6px; }
+            .badge { position: static; display: inline-block; margin-top: 6px; }
+        }
     </style>
 </head>
 <body>
@@ -178,14 +184,14 @@
                 <label>目标主机 IP（多个用英文逗号分隔）</label>
                 <div class="inline">
                     <div class="grow"><input id="input_target_ip" type="text" placeholder="例如：192.168.1.10, 192.168.1.11" /></div>
-                    <a href="#" class="btn btn-sm" id="btn_scan_ip">扫描局域网</a>
+                    <button type="button" class="btn btn-sm" id="btn_scan_ip">扫描局域网</button>
                 </div>
             </div>
             <div class="row">
                 <label>极域监听端口</label>
                 <div class="port-row">
                     <input id="input_target_port" type="number" min="1" max="65535" value="4705" />
-                    <a href="#" class="btn btn-sm" id="btn_scan_port">检测本机端口</a>
+                    <button type="button" class="btn btn-sm" id="btn_scan_port">检测本机端口</button>
                 </div>
             </div>
         </div>
@@ -203,19 +209,19 @@
                 <label>文字消息（100 字符以内）</label>
                 <div class="inline small">
                     <div class="grow"><textarea id="input_send_message" rows="2" style="height:58px" placeholder="要显示在目标屏幕上的文字"></textarea></div>
-                    <a href="#" class="btn btn-primary btn-sm" id="btn_send_msg">发送</a>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn_send_msg">发送</button>
                 </div>
             </div>
             <div class="row">
                 <label>CMD 命令（原协议，最大 462 字符）</label>
                 <div class="inline small">
                     <div class="grow"><textarea id="input_send_cmd" rows="5" style="height:112px" placeholder="例如：C:\Windows\System32\notepad.exe"></textarea></div>
-                    <a href="#" class="btn btn-primary btn-sm" id="btn_send_cmd">执行</a>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn_send_cmd">执行</button>
                 </div>
             </div>
             <div class="row send-actions">
-                <a href="#" class="btn btn-warn btn-sm" id="btn_send_shutdown">远程关机</a>
-                <a href="#" class="btn btn-warn btn-sm" id="btn_send_reboot">远程重启</a>
+                <button type="button" class="btn btn-warn btn-sm" id="btn_send_shutdown">远程关机</button>
+                <button type="button" class="btn btn-warn btn-sm" id="btn_send_reboot">远程重启</button>
             </div>
             <div class="hint">UDP 重放不会建立连接；发送成功只代表数据包已发出，不代表目标一定执行。</div>
         </div>

@@ -9,6 +9,14 @@
 
 extern int screenWidth, screenHeight;
 
+static int ScaleDpi(int px) {
+    HDC hdc = GetDC(NULL);
+    int dpi = hdc ? GetDeviceCaps(hdc, LOGPIXELSX) : 96;
+    if (hdc) ReleaseDC(NULL, hdc);
+    if (dpi <= 0) dpi = 96;
+    return MulDiv(px, dpi, 96);
+}
+
 static int FitScanWidth(int desired) {
     return (screenWidth > 0 && desired > screenWidth - 40) ? screenWidth - 40 : desired;
 }
@@ -16,11 +24,12 @@ static int FitScanHeight(int desired) {
     return (screenHeight > 0 && desired > screenHeight - 80) ? screenHeight - 80 : desired;
 }
 
-ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, FitScanWidth(580), FitScanHeight(700), L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
+ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, FitScanWidth(ScaleDpi(580)), FitScanHeight(ScaleDpi(700)), L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
 {
 	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE) ^ (WS_MAXIMIZEBOX | WS_SIZEBOX));
 	init();
 	Show();
+	SetTimer(_hWnd, 1, 450, nullptr);
 }
 ScanIPWindow::~ScanIPWindow()
 {
@@ -61,7 +70,7 @@ bool ScanIPWindow::on_event(HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, 
 			FillIpScanInput(ele.get_value().get(0));
 		}
 	}
-	else if (type == BUTTON_CLICK)
+	else if (type == BUTTON_CLICK || type == CLICK)
 	{
 		sciter::string id = ele.get_attribute("id");
 		if (id == L"btn_refresh_ip_list" && !isScanning) RefreshIpList();
@@ -75,6 +84,14 @@ LRESULT ScanIPWindow::onWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_MY_SCAN_ADD_STR: AddStringToIpList((LPCWSTR)wParam); *handled = TRUE; break;
 	case WM_MY_SCAN_IP_ADD: ScanAddIpToList((JyNetworkIP*)wParam); *handled = TRUE; break;
 	case WM_MY_SCAN_IP_FINISH: ScanFinish(); *handled = TRUE; break;
+	case WM_TIMER:
+		if (wParam == 1) {
+			KillTimer(_hWnd, 1);
+			std::wstring start = input_start_add.get_value().get(L"").c_str();
+			if (!isScanning && !start.empty()) RefreshIpList();
+			*handled = TRUE;
+		}
+		break;
 	case WM_MY_FORCE_HIDE: Hide(); *handled = TRUE; return 0;
 	}
 	return 0;

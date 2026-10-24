@@ -279,16 +279,17 @@ def main() -> int:
     check("ui/main_version_label", lambda: "v1.7.7" in main_html, "v1.7.7")
     check("ui/main_window_title", lambda: "<title>JiYu Trainer Main Window</title>" in main_html,
           "must match FindWindow(MAIN_WND_NAME)")
-    check("ui/window_16x9_cpp", lambda: "960, 540" in read_text(UI / "MainWindow.cpp", "gbk"),
-          "MainWindow must create a 960x540 client window")
+    check("ui/window_16x9_cpp", lambda: ("MulDiv(960, dpi, 96)" in read_text(UI / "MainWindow.cpp", "gbk") and
+                                              "MulDiv(540, dpi, 96)" in read_text(UI / "MainWindow.cpp", "gbk")),
+          "MainWindow must create a DPI-scaled 960x540 client window")
     check("ui/window_16x9_html", lambda: "width: 960px; height: 540px" in main_html,
           "card must be fixed 16:9")
-    check("ui/attack_window_size", lambda: ("FitAttackWidth(896)" in read_text(UI / "AttackWindow.cpp", "gbk") and
-                                                "FitAttackHeight(760)" in read_text(UI / "AttackWindow.cpp", "gbk")),
-          "UDP window should fit 896x760")
-    check("ui/scan_window_size", lambda: ("FitScanWidth(580)" in read_text(UI / "ScanIPWindow.cpp", "gbk") and
-                                              "FitScanHeight(700)" in read_text(UI / "ScanIPWindow.cpp", "gbk")),
-          "scan window should fit 580x700")
+    check("ui/attack_window_size", lambda: ("FitAttackWidth(ScaleDpi(896))" in read_text(UI / "AttackWindow.cpp", "gbk") and
+                                                "FitAttackHeight(ScaleDpi(760))" in read_text(UI / "AttackWindow.cpp", "gbk")),
+          "UDP window should fit DPI-scaled 896x760")
+    check("ui/scan_window_size", lambda: ("FitScanWidth(ScaleDpi(580))" in read_text(UI / "ScanIPWindow.cpp", "gbk") and
+                                              "FitScanHeight(ScaleDpi(700))" in read_text(UI / "ScanIPWindow.cpp", "gbk")),
+          "scan window should fit DPI-scaled 580x700")
 
     res_refs = set(re.findall(r"res:([^\"')\s]+)", main_html + read_text(UI / "AttackWindow.html")))
     missing_res = [ref for ref in res_refs if not (UI / "res" / ref).exists()]

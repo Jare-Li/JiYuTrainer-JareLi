@@ -40,7 +40,14 @@ MainWindow::MainWindow()
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	hWndMain = CreateWindow(wndClassName, MAIN_WND_NAME, WS_POPUP, 0, 0, 960, 540, NULL, NULL, currentApp->GetInstance(), this);
+	HDC hdc = GetDC(NULL);
+	int dpi = hdc ? GetDeviceCaps(hdc, LOGPIXELSX) : 96;
+	if (hdc) ReleaseDC(NULL, hdc);
+	if (dpi <= 0) dpi = 96;
+	int mainW = MulDiv(960, dpi, 96);
+	int mainH = MulDiv(540, dpi, 96);
+
+	hWndMain = CreateWindow(wndClassName, MAIN_WND_NAME, WS_POPUP, 0, 0, mainW, mainH, NULL, NULL, currentApp->GetInstance(), this);
 	if (!hWndMain)
 		return;
 
