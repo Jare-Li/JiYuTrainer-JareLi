@@ -2,8 +2,8 @@
 
 > 版本：`1.7.7.0 (Jare-Li Refactor)`  
 > 基线：`imengyu/JiYuTrainer 1.7.6`（MIT License）  
-> 发布标签：`v1.7.7`  
-> 发布包：`JiYuTrainer-JareLi-1.7.7.zip`
+> 发布标签：`v1.7.7-JGg`  
+> 发布包：`JiYuTrainer-JareLi-1.7.7-JGg.zip`
 
 ## 本次修复
 
@@ -45,7 +45,7 @@
 
 1. 从托盘退出旧版 JiYuTrainer（不要只关闭窗口）
 2. 备份旧目录中的 `JiYuTrainer.ini`（可选，保留设置）
-3. 下载 `JiYuTrainer-JareLi-1.7.7.zip`
+3. 下载 `JiYuTrainer-JareLi-1.7.7-JGg.zip`
 4. 解压到新目录，或覆盖旧目录
 5. 如果覆盖，保留原来的 `JiYuTrainer.ini`
 6. 运行 `JiYuTrainer.exe`，首次运行建议管理员权限
@@ -56,13 +56,13 @@
 ## 校验
 
 ```powershell
-Get-FileHash .\JiYuTrainer-JareLi-1.7.7.zip -Algorithm SHA256
+Get-FileHash .\JiYuTrainer-JareLi-1.7.7-JGg.zip -Algorithm SHA256
 Get-FileHash .\JiYuTrainer.exe -Algorithm SHA256
 ```
 
 ```text
 JiYuTrainer.exe            C0A45E345FA6664EC4505CFB9F860CFB672E5B879CFAC4CC0C97CBDA4C94D4F1
-JiYuTrainer-JareLi zip     5476AEC454068DACF78904F5DF40263CDA1C79ED304E79B03C2DAED34E012243
+JiYuTrainer-JareLi-1.7.7-JGg.zip  2269E586C4BAD4202E2C1B3A25889A570C47B1DE3C737D3F100CD21C008CF119
 ```
 
 如果哈希不一致，不要运行，请重新下载。
@@ -81,7 +81,7 @@ JiYuTrainer-JareLi zip     5476AEC454068DACF78904F5DF40263CDA1C79ED304E79B03C2DA
 
 ## 内置更新说明
 
-程序内置的“检查更新”仍指向原项目更新服务，不会自动发现 GitHub Release `v1.7.7`。  
+程序内置的“检查更新”仍指向原项目更新服务，不会自动发现 GitHub Release `v1.7.7-JGg`。  
 本次更新需要手动下载 zip 覆盖。
 
 ## 已知限制

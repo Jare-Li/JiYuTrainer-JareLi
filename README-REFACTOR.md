@@ -1,4 +1,4 @@
-# JiYu Trainer 1.7.7 — Jare-Li Refactor
+# JiYu Trainer 1.7.7-JGg — Jare-Li Refactor
 
 > 基于 [imengyu/JiYuTrainer](https://github.com/imengyu/JiYuTrainer) 1.7.6（MIT License）的重构版本。
 > 原版权归 **快乐的梦鱼（imengyu）** 所有；重构、构建与签名由 **Jare-Li** 完成。
@@ -91,7 +91,7 @@ pwsh -File .\build.ps1 -Sign -SkipTests
 
 - `Release/JiYuTrainer.exe`
 - `dist/`：exe、Hook DLL、sciter.dll、LICENSE、NOTICE、README
-- `JiYuTrainer-JareLi-1.7.7.zip`
+- `JiYuTrainer-JareLi-1.7.7-JGg.zip`
 
 说明：
 
@@ -209,6 +209,6 @@ Import-Certificate -FilePath .\build\certs\Jare-Li.cer -CertStoreLocation Cert:\
 Free code signing provided by [SignPath.io](https://about.signpath.io),
 certificate by [SignPath Foundation](https://signpath.org).
 
-## 12. v1.7.7 更新说明
+## 12. v1.7.7-JGg 更新说明
 
-见 [docs/UPDATE-v1.7.7.md](docs/UPDATE-v1.7.7.md)。
+见 [docs/UPDATE-v1.7.7-JGg.md](docs/UPDATE-v1.7.7-JGg.md)。
