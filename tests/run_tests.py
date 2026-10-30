@@ -300,7 +300,7 @@ def main() -> int:
     check("ui/attack_ids_complete", lambda: ATTACK_IDS.issubset(attack_ids),
           f"missing={sorted(ATTACK_IDS - attack_ids)}")
     check("ui/attack_warning", lambda: "仅限授权测试" in attack_html, "")
-    check("ui/attack_preserved_label", lambda: "原样保留" in attack_html, "")
+    check("ui/attack_preserved_label", lambda: ("原样保留" in attack_html or "原协议兼容" in attack_html), "")
 
     # Feature retention ----------------------------------------------------
     main_cpp = read_text(UI / "MainWindow.cpp", "gbk")

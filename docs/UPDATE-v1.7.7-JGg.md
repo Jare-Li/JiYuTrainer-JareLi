@@ -1,35 +1,45 @@
-# v1.7.7 更新说明
+# v1.7.7-JGg 更新说明
 
-> 版本：`1.7.7.0 (Jare-Li Refactor)`  
+> 程序版本：`1.7.7.0 (Jare-Li Refactor)`  
 > 基线：`imengyu/JiYuTrainer 1.7.6`（MIT License）  
 > 发布标签：`v1.7.7-JGg`  
 > 发布包：`JiYuTrainer-JareLi-1.7.7-JGg.zip`
 
-## 本次修复
+## 本次更新
 
-### 1. 关闭 / 最小化按钮位置
+### 1. 关闭 / 最小化移到右上角
 
-- 关闭 `×`、最小化 `−` 移到窗口**左上角**
-- 顺序：关闭在左，最小化在右
-- 不再与标题、状态卡片争抢右上角空间
+- 关闭 `×`、最小化 `−` 不再放在左上角
+- 现在位于标题栏右上角
+- 标题、图标从左侧开始，不再被窗口按钮挤压
 
-### 2. UDP 重放窗口
+### 2. 主窗口可移动
 
-- 窗口尺寸保持放大后的 `896×760`
-- 屏幕高度不足时自动缩小到 `screenHeight - 80`，避免被任务栏裁掉
-- 内容区域支持纵向滚动
-- IP 输入框与“扫描局域网”按钮不再重叠
+- 无边框主窗口增加标题栏拖动
+- 按住标题栏空白处、图标或标题即可移动窗口
+- 右上角 80px 保留给关闭/最小化，不会误拖
+- 同时保留原生 `WM_NCHITTEST` 处理，拖动更稳定
 
-### 3. IP 扫描
+### 3. UDP 界面完全重做
 
-- “开始扫描主机 IP”同时支持 `HYPERLINK_CLICK` 和 `BUTTON_CLICK`
-- 增加 `isScanning` 防重复点击
-- 保留并确认以下修复：
-  - 扫描范围尾部地址不再丢失（256 个地址完整覆盖）
-  - `SendARP` 失败不再误判为在线主机
-  - 修复扫描线程计数竞态
-  - 起始地址不能大于结束地址
-- 增加日志，便于定位：
+- 放弃之前容易错位的绝对定位/flex 混用布局
+- 改为稳定的 **表格双栏布局**：左栏目标与结果，右栏消息与命令
+- 所有输入框、按钮改为整行宽度，不再出现按钮压住输入框
+- 目标卡、结果卡、消息卡、CMD 卡、远程操作卡重新设计
+- 去掉了底部重复提示卡，窗口更干净
+- 保留原配色：`#f4f7fb` 背景、白色卡片、`#2ea4f0` 强调色
+- UDP 操作按钮全部改为原生 `<button>`，确保 C++ `BUTTON_CLICK` 能收到事件
+- 窗口按 DPI 缩放：100% / 125% / 150% 下保持可读
+
+### 4. IP 扫描
+
+- 扫描窗口打开后自动开始扫描（450ms 后），不依赖按钮点击
+- “扫描局域网主机”改为全宽按钮，点击后打开扫描窗口
+- 保留 `isScanning` 防重复
+- 保留扫描范围、`SendARP`、线程计数修复
+- 扫描结果实时加入列表，点击 IP 可复制
+
+日志位于 exe 同目录的 `JiYuTrainer.log`，关键标记：
 
 ```text
 [UDP] open scan window
@@ -38,8 +48,6 @@
 [ScanIP] range 192.168.x.0-255, count=256
 [ScanIP] finish, hosts=N
 ```
-
-日志位于 exe 同目录的 `JiYuTrainer.log`。
 
 ## 从旧版升级
 
@@ -61,8 +69,8 @@ Get-FileHash .\JiYuTrainer.exe -Algorithm SHA256
 ```
 
 ```text
-JiYuTrainer.exe            C0A45E345FA6664EC4505CFB9F860CFB672E5B879CFAC4CC0C97CBDA4C94D4F1
-JiYuTrainer-JareLi-1.7.7-JGg.zip  2269E586C4BAD4202E2C1B3A25889A570C47B1DE3C737D3F100CD21C008CF119
+JiYuTrainer.exe                  6BE86CE82AD8A09416C93F4BD036649E640EEB9C4E07210AEAE2FBD8BCCE8160
+JiYuTrainer-JareLi-1.7.7-JGg.zip D7A52E19BEEEE39D4414489472485E269701AF2EB8A1940FECDF94C56A9B63C3
 ```
 
 如果哈希不一致，不要运行，请重新下载。

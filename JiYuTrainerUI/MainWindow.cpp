@@ -949,6 +949,15 @@ void MainWindow::ShowTrayBaloonTip(const wchar_t* title, const wchar_t* text) {
 
 LRESULT CALLBACK MainWindow::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (message == WM_NCHITTEST) {
+		POINT pt = { (short)LOWORD(lParam), (short)HIWORD(lParam) };
+		ScreenToClient(hWnd, &pt);
+		RECT rc;
+		GetClientRect(hWnd, &rc);
+		// Draggable title bar; the right 90px is reserved for minimize/close.
+		if (pt.y >= 0 && pt.y < 38 && pt.x >= 0 && pt.x < rc.right - 90)
+			return HTCAPTION;
+	}
 
 	//SCITER integration starts
 	BOOL handled = FALSE;

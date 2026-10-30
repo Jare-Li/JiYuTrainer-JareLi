@@ -39,10 +39,10 @@
         }
 
         /* Title */
-        .titlebar { position: relative; height: 38px; padding-right: 0; padding-left: 0; white-space: nowrap; }
-        #title-icon { position: absolute; left: 82px; top: 8px; width: 22px; height: 22px; border-radius: 7px; }
+        .titlebar { position: relative; height: 38px; padding-right: 58px; padding-left: 0; white-space: nowrap; }
+        #title-icon { position: absolute; left: 0; top: 8px; width: 22px; height: 22px; border-radius: 7px; }
         #title {
-            position: absolute; left: 110px; top: 0; height: 38px; line-height: 38px;
+            position: absolute; left: 30px; top: 0; height: 38px; line-height: 38px;
             margin: 0; font-size: 13px; font-weight: 600; color: #475569; letter-spacing: .2px;
         }
         .badge {
@@ -55,8 +55,8 @@
             text-align: center; border-radius: 8px; color: #94a3b8; text-decoration: none;
             font-size: 17px; font-family: "Segoe UI", sans-serif;
         }
-        .title-min { left: 44px; right: auto; }
-        .title-close { left: 12px; right: auto; }
+        .title-min { right: 30px; left: auto; }
+        .title-close { right: 0; left: auto; }
         .title-min:hover, .title-close:hover { background: rgba(15, 23, 42, .06); color: #334155; }
 
         /* Status card */
@@ -685,8 +685,10 @@
         function doDrag() { while (dragging) view.doEvent(); }
 
         function onMouseDown(evt) {
-            if (evt.target !== body && evt.target !== $(#title-area) && evt.target !== $(#title-icon) && evt.target !== $(#title))
-                return false;
+            // Whole title bar is draggable; the right 80px is reserved for buttons.
+            var w = $(body).offsetWidth;
+            if (evt.y < 0 || evt.y > 38) return false;
+            if (evt.x < 0 || evt.x > w - 80) return false;
             xoff = evt.x;
             yoff = evt.y;
             dragging = true;
