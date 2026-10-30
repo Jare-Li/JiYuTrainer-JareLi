@@ -50,3 +50,6 @@ password.txt
 
 # Upload staging (not part of source repo)
 /github-upload/
+
+# Update helper build output
+/Release/JiYuTrainerUpdateHelper.exe

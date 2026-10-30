@@ -103,6 +103,7 @@ if ($Clean) {
 Invoke-MSBuild (Join-Path $Src 'JiYuTrainerUpdater\JiYuTrainerUpdater.vcxproj') 'updater'
 Invoke-MSBuild (Join-Path $Src 'JiYuTrainerUI\JiYuTrainerUI.vcxproj') 'ui'
 Invoke-MSBuild (Join-Path $Src 'JiYuTrainerHooks\JiYuTrainerHooks.vcxproj') 'hooks'
+Invoke-MSBuild (Join-Path $Src 'JiYuTrainerUpdateHelper\JiYuTrainerUpdateHelper.vcxproj') 'update-helper'
 
 # ---------------------------------------------------------------- signing
 $SignTool = $null
@@ -164,6 +165,7 @@ if ($Sign) {
 
     Write-Host '== Sign hook DLL (before embedding) ==' -ForegroundColor Cyan
     Invoke-SignFile (Join-Path $Release 'JiYuTrainerHooks.dll')
+    Invoke-SignFile (Join-Path $Release 'JiYuTrainerUpdateHelper.exe')
 }
 
 # Main exe embeds JiYuTrainerHooks.dll; build it after signing the hook.
@@ -200,13 +202,26 @@ if (Test-Path $Dist) { Remove-Item $Dist -Recurse -Force }
 New-Item -ItemType Directory -Force $Dist | Out-Null
 Copy-Item (Join-Path $Release 'JiYuTrainer.exe') $Dist -Force
 Copy-Item (Join-Path $Release 'JiYuTrainerHooks.dll') $Dist -Force
+Copy-Item (Join-Path $Release 'JiYuTrainerUpdateHelper.exe') $Dist -Force
 Copy-Item $SciterDll $Dist -Force
 Copy-Item (Join-Path $Src 'LICENSE') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'README-REFACTOR.md') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'NOTICE') $Dist -Force
-$zip = Join-Path $RepoRoot 'JiYuTrainer-JareLi-1.7.8.zip'
+Copy-Item (Join-Path $RepoRoot 'CODE_SIGNING.md') $Dist -Force
+Copy-Item (Join-Path $RepoRoot 'SECURITY.md') $Dist -Force
+Copy-Item (Join-Path $RepoRoot 'CONTRIBUTING.md') $Dist -Force
+Copy-Item (Join-Path $RepoRoot 'docs\FIRST-RUN.md') (Join-Path $Dist '首次运行说明.md') -Force
+if (Test-Path (Join-Path $RepoRoot 'test-report.md')) { Copy-Item (Join-Path $RepoRoot 'test-report.md') $Dist -Force }
+if (Test-Path (Join-Path $RepoRoot 'test-results.json')) { Copy-Item (Join-Path $RepoRoot 'test-results.json') $Dist -Force }
+$zip = Join-Path $RepoRoot 'JiYuTrainer-JareLi-1.7.9.zip'
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $Dist '*') -DestinationPath $zip -Force
+
+$sumFile = Join-Path $RepoRoot 'SHA256SUMS.txt'
+$zipHash = (Get-FileHash $zip -Algorithm SHA256).Hash
+$helperHash = (Get-FileHash (Join-Path $Release 'JiYuTrainerUpdateHelper.exe') -Algorithm SHA256).Hash
+$sumText = "$zipHash  $([IO.Path]::GetFileName($zip))`r`n$helperHash  JiYuTrainerUpdateHelper.exe`r`n"
+[IO.File]::WriteAllText($sumFile, $sumText, [Text.Encoding]::ASCII)
 
 Write-Host ''
 Write-Host 'Build complete.' -ForegroundColor Green

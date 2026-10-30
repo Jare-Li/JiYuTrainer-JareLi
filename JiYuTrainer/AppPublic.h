@@ -5,7 +5,7 @@
 #include "TrainerWorker.h" 
 #include "JyUdpAttack.h" 
 
-#define CURRENT_VERSION "1.7.8.0" 
+#define CURRENT_VERSION "1.7.9.0" 
 
 #define FAST_STR_BINDER(str, fstr, size, ...) WCHAR str[size]; swprintf_s(str, fstr, __VA_ARGS__)
 
