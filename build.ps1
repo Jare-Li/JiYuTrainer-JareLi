@@ -204,7 +204,7 @@ Copy-Item $SciterDll $Dist -Force
 Copy-Item (Join-Path $Src 'LICENSE') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'README-REFACTOR.md') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'NOTICE') $Dist -Force
-$zip = Join-Path $RepoRoot 'JiYuTrainer-JareLi-1.7.7-JGg.zip'
+$zip = Join-Path $RepoRoot 'JiYuTrainer-JareLi-1.7.8.zip'
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $Dist '*') -DestinationPath $zip -Force
 

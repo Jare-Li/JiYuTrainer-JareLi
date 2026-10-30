@@ -256,7 +256,7 @@ def main() -> int:
     check("version/copyright", lambda: ("imengyu" in version.get("LegalCopyright", "") and
                                         "Jare-Li" in version.get("LegalCopyright", "")),
           version.get("LegalCopyright", ""))
-    check("version/file_version", lambda: version.get("FileVersion", "").startswith("1.7.7.0"),
+    check("version/file_version", lambda: version.get("FileVersion", "").startswith("1.7.8.0"),
           version.get("FileVersion", ""))
     check("version/product_name", lambda: "Jare-Li" in version.get("ProductName", ""),
           version.get("ProductName", ""))
@@ -276,7 +276,7 @@ def main() -> int:
           f"missing={sorted(MAIN_IDS - set(main_ids))}")
     check("ui/main_no_duplicate_ids", lambda: len(main_ids) == len(set(main_ids)),
           f"{len(main_ids)} ids")
-    check("ui/main_version_label", lambda: "v1.7.7" in main_html, "v1.7.7")
+    check("ui/main_version_label", lambda: "v1.7.8" in main_html, "v1.7.8")
     check("ui/main_window_title", lambda: "<title>JiYu Trainer Main Window</title>" in main_html,
           "must match FindWindow(MAIN_WND_NAME)")
     check("ui/window_16x9_cpp", lambda: ("MulDiv(960, dpi, 96)" in read_text(UI / "MainWindow.cpp", "gbk") and
@@ -347,7 +347,7 @@ def main() -> int:
 
     # Version consistency --------------------------------------------------
     app_public = read_text(SRC / "JiYuTrainer" / "AppPublic.h", "gbk")
-    check("version/current_constant", lambda: 'CURRENT_VERSION "1.7.7.0"' in app_public, "")
+    check("version/current_constant", lambda: 'CURRENT_VERSION "1.7.8.0"' in app_public, "")
 
     # Summary --------------------------------------------------------------
     total = len(RESULTS)
