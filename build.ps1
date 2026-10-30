@@ -210,7 +210,7 @@ Copy-Item (Join-Path $RepoRoot 'NOTICE') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'CODE_SIGNING.md') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'SECURITY.md') $Dist -Force
 Copy-Item (Join-Path $RepoRoot 'CONTRIBUTING.md') $Dist -Force
-Copy-Item (Join-Path $RepoRoot 'docs\FIRST-RUN.md') (Join-Path $Dist '首次运行说明.md') -Force
+Copy-Item (Join-Path $RepoRoot 'docs\FIRST-RUN.md') (Join-Path $Dist 'FIRST-RUN.md') -Force
 if (Test-Path (Join-Path $RepoRoot 'test-report.md')) { Copy-Item (Join-Path $RepoRoot 'test-report.md') $Dist -Force }
 if (Test-Path (Join-Path $RepoRoot 'test-results.json')) { Copy-Item (Join-Path $RepoRoot 'test-results.json') $Dist -Force }
 $zip = Join-Path $RepoRoot 'JiYuTrainer-JareLi-1.7.9.zip'

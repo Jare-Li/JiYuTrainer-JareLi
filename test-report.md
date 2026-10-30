@@ -1,6 +1,6 @@
 # Test Report
 
-- Date: 2026-10-30T23:18:44
+- Date: 2026-10-30T23:20:43
 - Passed: 74
 - Failed: 0
 - Total: 74
@@ -46,7 +46,7 @@
 | `core/packet_command_capped` | PASS |  |
 | `core/packet_sizes` | PASS |  |
 | `core/summary` | PASS | 37 passed, 0 failed |
-| `artifact/exe_exists` | PASS | 4785992 bytes |
+| `artifact/exe_exists` | PASS | 4786504 bytes |
 | `artifact/hook_exists` | PASS | 668488 bytes |
 | `artifact/sciter_exists` | PASS | 5955632 bytes |
 | `artifact/build_script` | PASS | build.ps1 |

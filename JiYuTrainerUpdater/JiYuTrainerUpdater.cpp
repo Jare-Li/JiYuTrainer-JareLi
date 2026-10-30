@@ -189,6 +189,9 @@ static bool HttpDownload(const string& url, const wstring& path) {
         DeleteFileW(path.c_str());
         return false;
     }
+    // Remove Mark-of-the-Web so the downloaded helper is not blocked by SmartScreen.
+    wstring zone = path + L":Zone.Identifier";
+    DeleteFileW(zone.c_str());
     return true;
 }
 
