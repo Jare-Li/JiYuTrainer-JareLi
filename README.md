@@ -71,6 +71,8 @@ JiYuTrainer-JareLi-1.7.7-JGg.zip
 
 更新说明：[docs/UPDATE-v1.7.7-JGg.md](docs/UPDATE-v1.7.7-JGg.md)
 
+发布说明：[docs/RELEASE-NOTES-v1.7.7-JGg.md](docs/RELEASE-NOTES-v1.7.7-JGg.md)
+
 首次运行时如果出现 **Windows SmartScreen**，处理方式见 [首次运行说明](docs/FIRST-RUN.md) 或 [CODE_SIGNING.md](CODE_SIGNING.md)。
 
 ## Code signing policy
