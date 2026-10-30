@@ -77,6 +77,13 @@ LRESULT AttackWindow::onWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 {
 	switch (message)
 	{
+	case WM_CLOSE: {
+		// The UDP window is a tool window: closing it must never terminate the main app.
+		Hide();
+		if (currentScanIPWnd) currentScanIPWnd->Hide();
+		*handled = TRUE;
+		return 0;
+	}
 	case WM_MY_WND_CLOSE: {
 		void* wnd = (void*)wParam;
 		if (wnd == static_cast<CommonWindow*>(currentScanIPWnd)) {

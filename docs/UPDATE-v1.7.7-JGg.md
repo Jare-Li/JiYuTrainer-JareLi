@@ -51,6 +51,14 @@
 [ScanIP] finish, hosts=N
 ```
 
+### 5. 关闭 UDP 不再退出主程序
+
+- 关闭 UDP 窗口改为**隐藏**，不再销毁窗口或释放主窗口指针
+- 主界面、托盘、Hook 状态保持不变
+- 再次点击主界面的“UDP 重放”即可重新显示
+- 关闭 UDP 时如果扫描窗口还开着，扫描窗口也会一起隐藏
+- 修复了关闭后再次打开可能使用失效窗口指针的问题
+
 ## 从旧版升级
 
 1. 从托盘退出旧版 JiYuTrainer（不要只关闭窗口）
@@ -71,8 +79,8 @@ Get-FileHash .\JiYuTrainer.exe -Algorithm SHA256
 ```
 
 ```text
-JiYuTrainer.exe                  D906CEED55619B9ECB025319B0C14AEF362FB8D9010A43DB5A782506AC3188AD
-JiYuTrainer-JareLi-1.7.7-JGg.zip 39201B435BBC7885EB706D641E8BC8AD47C69C7AE0726D336CBC75ABA21A9C1A
+JiYuTrainer.exe                  0C89E4D0F4504D738A76517892A4968F326992972C1556DC49B8EC60EC83B054
+JiYuTrainer-JareLi-1.7.7-JGg.zip 0FED7C0F77DA1B91A50850176F44E79B553265919BEE3EB40ED70DC92A4A6054
 ```
 
 如果哈希不一致，不要运行，请重新下载。

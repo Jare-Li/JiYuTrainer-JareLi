@@ -109,6 +109,16 @@ bool CommonWindow::initClass()
 
 LRESULT CommonWindow::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// Give the owner a chance to handle close before Sciter/DefWindowProc destroys it.
+	if (message == WM_CLOSE) {
+		CommonWindow* cw = ptr(hWnd);
+		if (cw) {
+			BOOL closeHandled = FALSE;
+			LRESULT closeResult = cw->onWndProc(hWnd, message, wParam, lParam, &closeHandled);
+			if (closeHandled) return closeResult;
+		}
+	}
+
 	//SCITER integration starts
 	BOOL handled = FALSE;
 	LRESULT lr = SciterProcND(hWnd, message, wParam, lParam, &handled);

@@ -584,6 +584,8 @@ bool MainWindow::on_event(HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, UI
 			updateWindow.RunLoop();
 		}
 		else if (ele.get_attribute("id") == L"link_attact") {
+			if (currentAttackWindow && !IsWindow(currentAttackWindow->get_hwnd()))
+				currentAttackWindow = nullptr;
 			if (currentAttackWindow == nullptr)
 				currentAttackWindow = new AttackWindow(_hWnd);
 			else
@@ -1041,8 +1043,9 @@ LRESULT CALLBACK MainWindow::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 			self->currentHelpWindow = nullptr;
 		}
 		if (wnd == static_cast<CommonWindow*>(self->currentAttackWindow)) {
-			self->currentAttackWindow->Release();
+			AttackWindow* oldAttack = self->currentAttackWindow;
 			self->currentAttackWindow = nullptr;
+			oldAttack->Release();
 		}
 		break;
 	}
