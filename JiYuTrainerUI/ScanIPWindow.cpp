@@ -24,7 +24,7 @@ static int FitScanHeight(int desired) {
     return (screenHeight > 0 && desired > screenHeight - 80) ? screenHeight - 80 : desired;
 }
 
-ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, FitScanWidth(ScaleDpi(580)), FitScanHeight(ScaleDpi(700)), L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
+ScanIPWindow::ScanIPWindow(HWND parentHWnd) : CommonWindow(parentHWnd, FitScanWidth(ScaleDpi(640)), FitScanHeight(ScaleDpi(760)), L"JiYuTrainerScanIPWindow", L"扫描局域网主机", IDR_HTML_SCANIP)
 {
 	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE) ^ (WS_MAXIMIZEBOX | WS_SIZEBOX));
 	init();
@@ -44,6 +44,7 @@ sciter::value ScanIPWindow::docunmentComplete()
 	input_start_add = root.get_element_by_id(L"input_start_add");
 	input_end_add = root.get_element_by_id(L"input_end_add");
 	select_address = root.get_element_by_id(L"select_address");
+	scan_status = root.get_element_by_id(L"scan_status");
 	btn_refresh_ip_list = root.get_element_by_id(L"btn_refresh_ip_list");
 	select_address.attach_event_handler(this);
 
@@ -155,6 +156,11 @@ void ScanIPWindow::ScanFinish() {
 	isScanning = false;
 	btn_refresh_ip_list.set_text(L"扫描完成，重新扫描");
 	btn_refresh_ip_list.remove_attribute("disabled");
+	{
+		wchar_t status[64];
+		swprintf_s(status, L"扫描完成，发现 %d 台主机", scanCount);
+		scan_status.set_text(status);
+	}
 	currentApp->GetLogger()->Log(L"[ScanIP] finish, hosts=%d", scanCount);
 
 	if (scanCount == 0)
@@ -203,8 +209,10 @@ void ScanIPWindow::RefreshIpList() {
 	scanCount = 0;
 	isScanning = true;
 	ip_list.clear();
-	btn_refresh_ip_list.set_text(L"正在扫描请稍后...");
+	scan_status.set_text(L"正在扫描...");
+	btn_refresh_ip_list.set_text(L"正在扫描，请稍后...");
 	btn_refresh_ip_list.set_attribute("disabled", L"disabled");
+	scan_status.set_text(L"正在扫描...");
 	currentApp->GetLogger()->Log(L"[ScanIP] start %s - %s", start.c_str(), end.c_str());
 	JyUdpAttack::currentJyUdpAttack->ScanNetworkIP(this->_hWnd, start, end, ipHost1, scanCurrentIP);
 }

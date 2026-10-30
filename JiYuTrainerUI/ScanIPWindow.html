@@ -2,54 +2,56 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>扫描局域网主机</title>
+    <title>局域网扫描</title>
     <style>
         html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         body {
             font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
-            background: #f6f8fb;
-            color: #1f2937;
+            background: #f4f7fb;
+            color: #172033;
             font-size: 12px;
-            padding: 16px;
+            padding: 18px;
             box-sizing: border-box;
-            height: auto;
-            min-height: 100%;
+            height: 100%;
             overflow-y: auto;
         }
         * { box-sizing: border-box; }
-        .header { height: 48px; }
+
+        .header { height: 54px; }
         .header h1 {
             margin: 0;
-            font-size: 18px;
-            line-height: 24px;
+            font-size: 21px;
+            line-height: 27px;
             font-weight: 700;
             color: #0f172a;
         }
         .header p {
-            margin: 1px 0 0 0;
+            margin: 3px 0 0 0;
             font-size: 10px;
             line-height: 15px;
             color: #64748b;
         }
+
         .card {
-            margin-top: 10px;
-            padding: 12px 14px;
+            padding: 16px;
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
+            border-radius: 14px;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, .035);
         }
-        .field { margin-bottom: 8px; }
+        .field { margin-bottom: 12px; }
         .field:last-child { margin-bottom: 0; }
-        .field label {
+        label {
             display: block;
-            margin-bottom: 4px;
+            margin: 0 0 5px 0;
             font-size: 11px;
             color: #475569;
         }
         select, input {
+            display: block;
             width: 100%;
-            height: 32px;
-            padding: 0 9px;
+            height: 34px;
+            padding: 0 10px;
             border: 1px solid #dbe3ee;
             border-radius: 8px;
             background: #fbfdff;
@@ -58,42 +60,57 @@
             font-family: Consolas, "Microsoft YaHei UI", monospace;
             outline: none;
         }
-        select:focus, input:focus { border-color: #2ea4f0; background: #ffffff; }
-        .range-row { position: relative; }
-        .range-row .field { display: inline-block; width: 49%; vertical-align: top; }
-        .range-row .field + .field { margin-left: 2%; }
+        select:focus, input:focus {
+            border-color: #2ea4f0;
+            background: #ffffff;
+        }
+
         .btn {
-            display: inline-block;
+            display: block;
             width: 100%;
-            height: 38px;
-            line-height: 38px;
-            margin-top: 2px;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 12px;
+            border: none;
             border-radius: 9px;
             background: #2ea4f0;
             color: #ffffff;
+            font-family: inherit;
             font-size: 12px;
             text-align: center;
-            text-decoration: none;
-            border: none;
             cursor: pointer;
         }
         .btn:hover { background: #1d8ed8; }
-        .btn[disabled] { background: #cbd5e1; color: #ffffff; }
+        .btn[disabled] { background: #cbd5e1; }
+
         .hint {
-            margin-top: 6px;
+            margin-top: 8px;
             color: #94a3b8;
             font-size: 9px;
             line-height: 14px;
         }
-        .list-title {
-            margin: 10px 0 5px 2px;
-            font-size: 10px;
-            letter-spacing: .3px;
-            color: #94a3b8;
-            font-weight: 600;
+
+        .result-head {
+            margin: 14px 1px 7px 1px;
+            height: 18px;
         }
+        .result-head b {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: #94a3b8;
+            line-height: 18px;
+        }
+        #scan_status {
+            float: right;
+            color: #64748b;
+            font-size: 9px;
+            line-height: 18px;
+        }
+
         #ip_list {
-            height: 250px;
+            height: 258px;
             padding: 4px 0;
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -103,7 +120,7 @@
             color: #334155;
         }
         #ip_list > div {
-            padding: 7px 10px;
+            padding: 8px 11px;
             border-bottom: 1px solid #f1f5f9;
             line-height: 16px;
         }
@@ -123,13 +140,21 @@
             font-size: 9px;
             font-family: Consolas, monospace;
         }
-        .empty { color: #94a3b8; font-size: 10px; }
+        .empty { color: #94a3b8; font-size: 10px; padding: 8px 10px; }
+
+        .footer {
+            margin-top: 9px;
+            color: #94a3b8;
+            font-size: 9px;
+            line-height: 14px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>局域网主机扫描</h1>
-        <p>选择本机网卡，填写同一网段的起止地址；扫描结果可点击复制 IP。</p>
+        <h1>局域网扫描</h1>
+        <p>选择本机网卡，填写同一网段的起止地址；使用 ARP 扫描，不修改目标主机。</p>
     </div>
 
     <div class="card">
@@ -137,24 +162,27 @@
             <label>本机地址</label>
             <select id="select_address"></select>
         </div>
-        <div class="range-row">
-            <div class="field">
-                <label>开始地址</label>
-                <input id="input_start_add" placeholder="192.168.1.1" />
-            </div>
-            <div class="field">
-                <label>结束地址</label>
-                <input id="input_end_add" placeholder="192.168.1.254" />
-            </div>
+        <div class="field">
+            <label>开始地址</label>
+            <input id="input_start_add" placeholder="192.168.1.1" />
         </div>
-        <a href="#" class="btn" id="btn_refresh_ip_list">开始扫描主机 IP</a>
-        <div class="hint">只扫描同一网段；扫描使用 ARP，不会修改目标主机。点击结果中的 IP 可复制。</div>
+        <div class="field">
+            <label>结束地址</label>
+            <input id="input_end_add" placeholder="192.168.1.254" />
+        </div>
+        <button type="button" class="btn" id="btn_refresh_ip_list">开始扫描主机 IP</button>
+        <div class="hint">只扫描同一网段；点击结果中的 IP 可复制。</div>
     </div>
 
-    <div class="list-title">扫描结果</div>
-    <div id="ip_list">
-        <div class="empty">请点击上方按钮开始扫描局域网内主机 IP</div>
+    <div class="result-head">
+        <b>扫描结果</b>
+        <span id="scan_status">就绪</span>
     </div>
+    <div id="ip_list">
+        <div class="empty">尚未开始扫描</div>
+    </div>
+
+    <div class="footer">扫描结果来自局域网 ARP 响应，未响应不代表主机不存在。</div>
 
     <script type="text/tiscript">
         function self.ready()

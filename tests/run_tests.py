@@ -287,9 +287,9 @@ def main() -> int:
     check("ui/attack_window_size", lambda: ("FitAttackWidth(ScaleDpi(896))" in read_text(UI / "AttackWindow.cpp", "gbk") and
                                                 "FitAttackHeight(ScaleDpi(760))" in read_text(UI / "AttackWindow.cpp", "gbk")),
           "UDP window should fit DPI-scaled 896x760")
-    check("ui/scan_window_size", lambda: ("FitScanWidth(ScaleDpi(580))" in read_text(UI / "ScanIPWindow.cpp", "gbk") and
-                                              "FitScanHeight(ScaleDpi(700))" in read_text(UI / "ScanIPWindow.cpp", "gbk")),
-          "scan window should fit DPI-scaled 580x700")
+    check("ui/scan_window_size", lambda: ("FitScanWidth(ScaleDpi(640))" in read_text(UI / "ScanIPWindow.cpp", "gbk") and
+                                              "FitScanHeight(ScaleDpi(760))" in read_text(UI / "ScanIPWindow.cpp", "gbk")),
+          "scan window should fit DPI-scaled 640x760")
 
     res_refs = set(re.findall(r"res:([^\"')\s]+)", main_html + read_text(UI / "AttackWindow.html")))
     missing_res = [ref for ref in res_refs if not (UI / "res" / ref).exists()]

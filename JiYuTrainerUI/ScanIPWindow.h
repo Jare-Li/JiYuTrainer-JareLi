@@ -26,6 +26,7 @@ private:
 	sciter::dom::element input_start_add;
 	sciter::dom::element input_end_add;
 	sciter::dom::element select_address;
+	sciter::dom::element scan_status;
 
 	void RefreshIpList();
 	void ScanAddIpToList(JyNetworkIP* data);

@@ -10,7 +10,7 @@
 ### 1. 关闭 / 最小化移到右上角
 
 - 关闭 `×`、最小化 `−` 不再放在左上角
-- 现在位于标题栏右上角
+- 现在位于窗口**最右上角**，不在侧栏内留边距
 - 标题、图标从左侧开始，不再被窗口按钮挤压
 
 ### 2. 主窗口可移动
@@ -33,6 +33,8 @@
 
 ### 4. IP 扫描
 
+- 扫描窗口改为 **640×760**，起止地址改为整行输入
+- 增加“正在扫描 / 扫描完成，发现 N 台主机”状态
 - 扫描窗口打开后自动开始扫描（450ms 后），不依赖按钮点击
 - “扫描局域网主机”改为全宽按钮，点击后打开扫描窗口
 - 保留 `isScanning` 防重复
@@ -69,8 +71,8 @@ Get-FileHash .\JiYuTrainer.exe -Algorithm SHA256
 ```
 
 ```text
-JiYuTrainer.exe                  6BE86CE82AD8A09416C93F4BD036649E640EEB9C4E07210AEAE2FBD8BCCE8160
-JiYuTrainer-JareLi-1.7.7-JGg.zip D7A52E19BEEEE39D4414489472485E269701AF2EB8A1940FECDF94C56A9B63C3
+JiYuTrainer.exe                  D906CEED55619B9ECB025319B0C14AEF362FB8D9010A43DB5A782506AC3188AD
+JiYuTrainer-JareLi-1.7.7-JGg.zip 39201B435BBC7885EB706D641E8BC8AD47C69C7AE0726D336CBC75ABA21A9C1A
 ```
 
 如果哈希不一致，不要运行，请重新下载。
