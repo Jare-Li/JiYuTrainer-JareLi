@@ -53,3 +53,8 @@ password.txt
 
 # Update helper build output
 /Release/JiYuTrainerUpdateHelper.exe
+
+# Clean reinstall staging (binaries are packaged into the zip)
+/clean-reinstall/*
+!/clean-reinstall/reinstall.ps1
+!/clean-reinstall/????.md
