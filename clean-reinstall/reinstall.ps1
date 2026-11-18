@@ -1,6 +1,6 @@
 ﻿#requires -Version 5.1
 param(
-    [string]$Target = "C:\JiYuTrainer-1.7.9"
+    [string]$Target = "C:\JiYuTrainer-1.7.9.1"
 )
 
 $ErrorActionPreference = "Stop"

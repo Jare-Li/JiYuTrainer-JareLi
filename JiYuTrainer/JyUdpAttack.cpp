@@ -125,10 +125,15 @@ DWORD __stdcall JyUdpAttack::SendThread(void* data) {
         int sendBytes;
         if ((sendBytes = sendto(sockfd,
             (const char*)task->data, sizeof(task->data), 0,
-            (sockaddr*)&dest_addr, sizeof(sockaddr))) == -1)
+            (sockaddr*)&dest_addr, sizeof(sockaddr))) == -1) {
+            if (currentLogger) currentLogger->Log(L"[UDP] sendto FAILED ip=%s port=%lu errno=%d", task->ip.c_str(), task->port, errno);
             TaskFeedbackMessage(task, FormatStringPtr(L"send失败: %d", errno));
-        else 
+        }
+        else {
+            if (currentLogger) currentLogger->Log(L"[UDP] sendto OK ip=%s port=%lu bytes=%d head=%02X%02X%02X%02X",
+                task->ip.c_str(), task->port, sendBytes, task->data[0], task->data[1], task->data[2], task->data[3]);
             TaskFeedbackMessage(task, FormatStringPtr(L"发送成功。%d 字节", sendBytes));
+        }
            
         closesocket(sockfd);
     }

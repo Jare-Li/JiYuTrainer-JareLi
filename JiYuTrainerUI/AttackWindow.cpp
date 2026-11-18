@@ -126,11 +126,14 @@ bool AttackWindow::SendCommonCheck(std::vector<std::wstring> *ips, DWORD *port)
 		return false;
 	}
 
-	*port = input_target_port.get_value().get(-1);
-	if (*port < 0 || *port > 65535) {
-		AddStringToReult(L"端口错误，端口必须是0-65535的数字");
+	std::wstring portText = input_target_port.get_value().to_string();
+	*port = (DWORD)_wtoi(portText.c_str());
+	if (*port == 0 || *port > 65535) {
+		AddStringToReult(L"端口错误，端口必须是1-65535的数字");
 		return false;
 	}
+	if (currentApp && currentApp->GetLogger())
+		currentApp->GetLogger()->Log(L"[UDP] target=%s port=%lu", str.c_str(), *port);
 
 	*ips = IpUtils::SplitIpList(str);
 	if (ips->empty()) {
@@ -185,6 +188,7 @@ void AttackWindow::SendText() {
 		JyUdpAttack::currentJyUdpAttack->SendText(ip, port, cmd);
 }
 void AttackWindow::SendShutdown() {
+	if (currentApp && currentApp->GetLogger()) currentApp->GetLogger()->Log(L"[UDP] shutdown requested");
 	if (MessageBox(_hWnd, L"确认发送该命令？", L"提示", MB_YESNO | MB_ICONEXCLAMATION) == IDYES) {
 
 		std::vector<std::wstring> ips;
@@ -196,6 +200,7 @@ void AttackWindow::SendShutdown() {
 	}
 }
 void AttackWindow::SendReboott() {
+	if (currentApp && currentApp->GetLogger()) currentApp->GetLogger()->Log(L"[UDP] reboot requested");
 	if (MessageBox(_hWnd, L"确认发送该命令？", L"提示", MB_YESNO | MB_ICONEXCLAMATION) == IDYES) {
 
 		std::vector<std::wstring> ips;

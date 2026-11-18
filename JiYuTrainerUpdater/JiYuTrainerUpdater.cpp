@@ -176,7 +176,7 @@ static bool HttpDownload(const string& url, const wstring& path) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "JiYuTrainer-Updater/1.7.9");
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "JiYuTrainer-Updater/1.7.9.1");
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
     curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 180L);
@@ -206,7 +206,7 @@ static bool LoadSums() {
         if (sscanf_s(line, "%64s %255s", h, (unsigned)sizeof(h), n, (unsigned)sizeof(n)) != 2) continue;
         if (n[0] == '*') memmove(n, n + 1, strlen(n));
         wstring name = StringHlp::AnsiToUnicode(n);
-        if (_wcsicmp(name.c_str(), L"JiYuTrainer-JareLi-1.7.9.zip") == 0 ||
+        if (_wcsicmp(name.c_str(), L"JiYuTrainer-JareLi-1.7.9.1.zip") == 0 ||
             (wcsstr(name.c_str(), L"JiYuTrainer-JareLi-") && wcsstr(name.c_str(), L".zip"))) {
             g_expectedHash = StringHlp::AnsiToUnicode(h);
             zip = true;
@@ -372,7 +372,7 @@ DWORD WINAPI UpdateDownloadThread(LPVOID) {
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-            curl_easy_setopt(curl, CURLOPT_USERAGENT, "JiYuTrainer-Updater/1.7.9");
+            curl_easy_setopt(curl, CURLOPT_USERAGENT, "JiYuTrainer-Updater/1.7.9.1");
             curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, 180L);
